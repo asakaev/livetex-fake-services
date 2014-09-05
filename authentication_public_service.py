@@ -11,13 +11,13 @@ from authentication.ttypes import *
 from authentication import AuthenticationPublic
 
 class AuthenticationPublicHandler:
-	def getToken(self, client):
-		endpoint = Endpoint('chat.livetex.ru', 8080, 'http', '/');
-		result = AuthenticationResult()
-		result.token = hex(random.randint(pow(2, 32), pow(2, 34)))[2:]
-		result.services = { 'chat': endpoint }
-		result.options = { 'optName': 'optVal' }
-		return result
+  def getToken(self, client):
+    endpoint = Endpoint('chat.livetex.ru', 8080, 'http', '/');
+    result = AuthenticationResult()
+    result.token = hex(random.randint(pow(2, 32), pow(2, 34)))[2:]
+    result.services = { 'chat': endpoint }
+    result.options = { 'optName': 'optVal' }
+    return result
 
 authPublicHandler = AuthenticationPublicHandler()
 
@@ -30,7 +30,3 @@ server = THttpServer.THttpServer(processor, ('localhost', 9090), pfactory)
 print 'Starting the server...'
 server.serve()
 print 'done.'
-
-# 1: required Token token;
-# 2: required map<Service, Endpoint> services;
-# 3: optional Options options;

@@ -4,4 +4,4 @@
 * `git clone https://github.com/hobbit-vt/authentication-service-fake.git`
 * `cd authentication-service-fake`
 * `pip install thrift`
-* Для старта сервера надо вызвать `python authentication_public_service.py`
+* Для старта сервера надо вызвать `python run_services.py`

@@ -1,6 +1,5 @@
 import sys, glob
 sys.path.append('gen-py')
-sys.path.insert(0, glob.glob('build/thrift/build/lib.*')[0])
 
 from thrift import Thrift
 from thrift.transport import THttpClient
@@ -9,23 +8,28 @@ from thrift.protocol import TBinaryProtocol
 from thrift.protocol import TJSONProtocol
 from thrift.server import THttpServer
 
-from authentication.ttypes import *
-from authentication import AuthenticationPrivate
+from livetex.authentication_private import AuthenticationPrivate
+
+from livetex.endpoint.ttypes import *
+from livetex.livetex_service.ttypes import *
+from livetex.environment.ttypes import *
+from livetex.token.ttypes import *
+from livetex.client_entity.ttypes import *
 
 try:
 
-  transport = THttpClient.THttpClient('http://localhost:9091/')
+  transport = THttpClient.THttpClient('http://localhost:10020/')
   protocol = TBinaryProtocol.TBinaryProtocol(transport)
 
   client = AuthenticationPrivate.Client(protocol)
 
   token = 'some_token'
-  service = 'event_service'
+  service = LivetexService.DIALOG
   environment = 'dev'
   endpoint1 = Endpoint('chat1.livetex.ru', 80, 'http', '/');
   endpoint2 = Endpoint('chat2.livetex.ru', 443, 'https', '/');
   endpoints = [endpoint1, endpoint2]
-  clientEntity = ClientEntity('5468', 'visitor', { 'some_opt': 'some_val' })
+  clientEntity = ClientEntity('5468', 'visitor')
   
   transport.open()
 

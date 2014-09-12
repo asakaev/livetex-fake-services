@@ -1,9 +1,8 @@
 import sys, glob
 sys.path.append('gen-py')
-sys.path.insert(0, glob.glob('build/thrift/build/lib.*')[0])
 
-from authentication.ttypes import *
-from authentication import AuthenticationPrivate
+from livetex.authentication_private.ttypes import *
+from livetex.endpoint.ttypes import *
 
 class AuthenticationPrivateHandler:
   def removeToken(self, token):
@@ -11,7 +10,7 @@ class AuthenticationPrivateHandler:
 
   def checkToken(self, token):
     result = CheckTokenResult()
-    result.result = 1
+    result.result = True
     result.options = { 'optName': 'optVal' }
     return result
 

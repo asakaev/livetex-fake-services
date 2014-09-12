@@ -1,40 +1,25 @@
-import sys, glob, random, threading, time
+import sys, threading, os
 sys.path.append('gen-py')
-sys.path.insert(0, glob.glob('build/thrift/build/lib.*')[0])
-
-from thrift.transport import TTransport
-from thrift.protocol import TBinaryProtocol
-from thrift.protocol import TJSONProtocol
-from thrift.server import THttpServer
-
-from authentication.ttypes import *
-from authentication import AuthenticationPublic
-from authentication import AuthenticationPrivate
-
-from authentication_public_service import AuthenticationPublicHandler
-from authentication_private_service import AuthenticationPrivateHandler
-
-authPublicHandler = AuthenticationPublicHandler()
-authPrivateHandler = AuthenticationPrivateHandler()
-
-pfactory = TBinaryProtocol.TBinaryProtocolFactory()
-
-pubProcessor = AuthenticationPublic.Processor(authPublicHandler)
-privProcessor = AuthenticationPrivate.Processor(authPrivateHandler)
 
 
-def runServer(processor, port, name):
-  server = THttpServer.THttpServer(processor, ('localhost', port), pfactory)
-  print 'Starting the ' + name + ' server...'
-  server.serve()
+def runScript(fileName):
+  os.system('python ' + fileName)
 
-pubThread = threading.Thread(target=runServer, args=(pubProcessor, 9090, 'public'))
-pubThread.daemon = True
-privThread = threading.Thread(target=runServer, args=(privProcessor, 9091, 'private'))
-privThread.daemon = True
+threads = []
+files = [
+  'authentication_private_run.py',
+  'authentication_public_run.py',
+  'dialog_run.py',
+  'client_dialog_run.py',
+  'presence_run.py',
+  'visitor_run.py'
+]
 
-pubThread.start()
-privThread.start()
+for fileItem in files: 
+  thread = threading.Thread(target=runScript, args=(fileItem,))
+  thread.start()
+  threads.append(thread)
 
-while True:
-    time.sleep(1)
+
+for thread in threads:
+  thread.join()

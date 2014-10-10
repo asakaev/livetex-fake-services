@@ -12,6 +12,7 @@ from livetex.dialog.ttypes import *
 from livetex.operator.ttypes import *
 from livetex.department.ttypes import *
 from livetex.vote.ttypes import *
+from livetex.message.ttypes import *
 
 from livetex.dialog import Dialog
 
@@ -64,6 +65,9 @@ try:
 
   history = client.messageHistory(16, 16)
   print 'messageHistory is ok: ' + str(history)
+
+  print client.getState()
+  print 'getState is ok'
 
 except Thrift.TException, tx:
   

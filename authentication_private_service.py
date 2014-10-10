@@ -25,5 +25,5 @@ class AuthenticationPrivateHandler:
     endpoint2 = Endpoint('chat2.livetex.ru', 443, 'https', '/');
     return [endpoint1, endpoint2]
 
-  def changeEnvironment(self, client, environment):
+  def changeVisitorApplicationEnvironment(self, client, environment):
     pass

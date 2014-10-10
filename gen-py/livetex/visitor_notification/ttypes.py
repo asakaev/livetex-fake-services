@@ -8,6 +8,10 @@
 #
 
 from thrift.Thrift import TType, TMessageType, TException, TApplicationException
+import livetex.operator.ttypes
+import livetex.message.ttypes
+import livetex.dialog_state.ttypes
+
 
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol, TProtocol

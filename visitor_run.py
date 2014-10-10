@@ -1,4 +1,4 @@
-import sys, glob, random, threading, time
+import sys, glob, random, threading, time, BaseHTTPServer
 sys.path.append('gen-py')
 
 from thrift.transport import TTransport
@@ -12,6 +12,7 @@ from visitor_service import VisitorHandler
 
 hadler = VisitorHandler()
 pfactory = TBinaryProtocol.TBinaryProtocolFactory()
+#pfactory = TJSONProtocol.TJSONProtocolFactory()
 processor = Visitor.Processor(hadler)
 
 server = THttpServer.THttpServer(processor, ('localhost', 10060), pfactory)

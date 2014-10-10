@@ -16,17 +16,21 @@ from thrift.transport import TSSLSocket
 from thrift.transport import THttpClient
 from thrift.protocol import TBinaryProtocol
 
-from livetex.presence import Presence
-from livetex.presence.ttypes import *
+from livetex.visitor_notification import VisitorNotification
+from livetex.visitor_notification.ttypes import *
 
 if len(sys.argv) <= 1 or sys.argv[1] == '--help':
   print('')
   print('Usage: ' + sys.argv[0] + ' [-h host[:port]] [-u url] [-f[ramed]] [-s[sl]] function [arg1 [arg2...]]')
   print('')
   print('Functions:')
-  print('   getOperators(Status status)')
-  print('   getDepartments(Status status)')
-  print('   getDepartmentOperators(Department department)')
+  print('  void ban(string message)')
+  print('  void updateDialogState(DialogState state)')
+  print('  void receiveFileMessage(FileMessage message)')
+  print('  void receiveTextMessage(TextMessage message)')
+  print('  void confirmTextMessage(TextMessage message)')
+  print('  void receiveHoldMessage(HoldMessage message)')
+  print('  void receiveTypingMessage(TypingMessage message)')
   print('')
   sys.exit(0)
 
@@ -80,26 +84,50 @@ else:
   else:
     transport = TTransport.TBufferedTransport(socket)
 protocol = TBinaryProtocol.TBinaryProtocol(transport)
-client = Presence.Client(protocol)
+client = VisitorNotification.Client(protocol)
 transport.open()
 
-if cmd == 'getOperators':
+if cmd == 'ban':
   if len(args) != 1:
-    print('getOperators requires 1 args')
+    print('ban requires 1 args')
     sys.exit(1)
-  pp.pprint(client.getOperators(eval(args[0]),))
+  pp.pprint(client.ban(args[0],))
 
-elif cmd == 'getDepartments':
+elif cmd == 'updateDialogState':
   if len(args) != 1:
-    print('getDepartments requires 1 args')
+    print('updateDialogState requires 1 args')
     sys.exit(1)
-  pp.pprint(client.getDepartments(eval(args[0]),))
+  pp.pprint(client.updateDialogState(eval(args[0]),))
 
-elif cmd == 'getDepartmentOperators':
+elif cmd == 'receiveFileMessage':
   if len(args) != 1:
-    print('getDepartmentOperators requires 1 args')
+    print('receiveFileMessage requires 1 args')
     sys.exit(1)
-  pp.pprint(client.getDepartmentOperators(eval(args[0]),))
+  pp.pprint(client.receiveFileMessage(eval(args[0]),))
+
+elif cmd == 'receiveTextMessage':
+  if len(args) != 1:
+    print('receiveTextMessage requires 1 args')
+    sys.exit(1)
+  pp.pprint(client.receiveTextMessage(eval(args[0]),))
+
+elif cmd == 'confirmTextMessage':
+  if len(args) != 1:
+    print('confirmTextMessage requires 1 args')
+    sys.exit(1)
+  pp.pprint(client.confirmTextMessage(eval(args[0]),))
+
+elif cmd == 'receiveHoldMessage':
+  if len(args) != 1:
+    print('receiveHoldMessage requires 1 args')
+    sys.exit(1)
+  pp.pprint(client.receiveHoldMessage(eval(args[0]),))
+
+elif cmd == 'receiveTypingMessage':
+  if len(args) != 1:
+    print('receiveTypingMessage requires 1 args')
+    sys.exit(1)
+  pp.pprint(client.receiveTypingMessage(eval(args[0]),))
 
 else:
   print('Unrecognized method %s' % cmd)

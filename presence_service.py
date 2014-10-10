@@ -47,4 +47,3 @@ class PresenceHandler:
 
   def getDepartmentOperators(self, status): 
     return [self.operator1, self. operator2]
-

@@ -13,6 +13,7 @@ from authentication_public_service import AuthenticationPublicHandler
 
 authPublicHandler = AuthenticationPublicHandler()
 pfactory = TBinaryProtocol.TBinaryProtocolFactory()
+#pfactory = TJSONProtocol.TJSONProtocolFactory()
 processor = AuthenticationPublic.Processor(authPublicHandler)
 
 server = THttpServer.THttpServer(processor, ('localhost', 10010), pfactory)

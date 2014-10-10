@@ -10,7 +10,6 @@ files = [
   'authentication_private_run.py',
   'authentication_public_run.py',
   'dialog_run.py',
-  'client_dialog_run.py',
   'presence_run.py',
   'visitor_run.py'
 ]

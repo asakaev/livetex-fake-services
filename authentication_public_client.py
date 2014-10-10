@@ -23,12 +23,12 @@ try:
   
   transport.open()
 
-  clientEntity = ClientEntity()
-  clientEntity.id = 'some_id'
-  clientEntity.type = 'some_type'
-  clientEntity.apiKey = 'api_key'
-  clientEntity.capabilities = [ Capabilities.CHAT, Capabilities.LEAD ]
-  print client.getToken(clientEntity)
+  VisitorApplication = VisitorApplication()
+  VisitorApplication.token = 'some_token'
+  VisitorApplication.application = 'application'
+  VisitorApplication.key = 'api_key'
+  VisitorApplication.capabilities = [ Capabilities.CHAT, Capabilities.LEAD ]
+  print client.getVisitorApplicationToken(VisitorApplication)
 
   transport.close()
 

@@ -8,6 +8,9 @@
 #
 
 from thrift.Thrift import TType, TMessageType, TException, TApplicationException
+import livetex.operator.ttypes
+import livetex.department.ttypes
+
 
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol, TProtocol
@@ -18,39 +21,28 @@ except:
 
 
 
-class Endpoint:
+class Conversation:
   """
-  Точка входа в сервис.
+  Обращение клиента.
 
+  operator: обращение с указанием конкретного оператора.
 
-  host: адрес хоста.
-
-  port: порт.
-
-  protocol: используемый протокол.
-
-  path: путь.
+  department: обращение с указанием конкретного департамента.
 
   Attributes:
-   - host
-   - port
-   - protocol
-   - path
+   - operator
+   - department
   """
 
   thrift_spec = (
     None, # 0
-    (1, TType.STRING, 'host', None, None, ), # 1
-    (2, TType.I16, 'port', None, None, ), # 2
-    (3, TType.STRING, 'protocol', None, None, ), # 3
-    (4, TType.STRING, 'path', None, None, ), # 4
+    (1, TType.STRUCT, 'operator', (livetex.operator.ttypes.Operator, livetex.operator.ttypes.Operator.thrift_spec), None, ), # 1
+    (2, TType.STRUCT, 'department', (livetex.department.ttypes.Department, livetex.department.ttypes.Department.thrift_spec), None, ), # 2
   )
 
-  def __init__(self, host=None, port=None, protocol=None, path=None,):
-    self.host = host
-    self.port = port
-    self.protocol = protocol
-    self.path = path
+  def __init__(self, operator=None, department=None,):
+    self.operator = operator
+    self.department = department
 
   def read(self, iprot):
     if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
@@ -62,23 +54,15 @@ class Endpoint:
       if ftype == TType.STOP:
         break
       if fid == 1:
-        if ftype == TType.STRING:
-          self.host = iprot.readString();
+        if ftype == TType.STRUCT:
+          self.operator = livetex.operator.ttypes.Operator()
+          self.operator.read(iprot)
         else:
           iprot.skip(ftype)
       elif fid == 2:
-        if ftype == TType.I16:
-          self.port = iprot.readI16();
-        else:
-          iprot.skip(ftype)
-      elif fid == 3:
-        if ftype == TType.STRING:
-          self.protocol = iprot.readString();
-        else:
-          iprot.skip(ftype)
-      elif fid == 4:
-        if ftype == TType.STRING:
-          self.path = iprot.readString();
+        if ftype == TType.STRUCT:
+          self.department = livetex.department.ttypes.Department()
+          self.department.read(iprot)
         else:
           iprot.skip(ftype)
       else:
@@ -90,31 +74,19 @@ class Endpoint:
     if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
-    oprot.writeStructBegin('Endpoint')
-    if self.host is not None:
-      oprot.writeFieldBegin('host', TType.STRING, 1)
-      oprot.writeString(self.host)
+    oprot.writeStructBegin('Conversation')
+    if self.operator is not None:
+      oprot.writeFieldBegin('operator', TType.STRUCT, 1)
+      self.operator.write(oprot)
       oprot.writeFieldEnd()
-    if self.port is not None:
-      oprot.writeFieldBegin('port', TType.I16, 2)
-      oprot.writeI16(self.port)
-      oprot.writeFieldEnd()
-    if self.protocol is not None:
-      oprot.writeFieldBegin('protocol', TType.STRING, 3)
-      oprot.writeString(self.protocol)
-      oprot.writeFieldEnd()
-    if self.path is not None:
-      oprot.writeFieldBegin('path', TType.STRING, 4)
-      oprot.writeString(self.path)
+    if self.department is not None:
+      oprot.writeFieldBegin('department', TType.STRUCT, 2)
+      self.department.write(oprot)
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()
 
   def validate(self):
-    if self.host is None:
-      raise TProtocol.TProtocolException(message='Required field host is unset!')
-    if self.port is None:
-      raise TProtocol.TProtocolException(message='Required field port is unset!')
     return
 
 

@@ -29,7 +29,10 @@ try:
   endpoint1 = Endpoint('chat1.livetex.ru', 80, 'http', '/');
   endpoint2 = Endpoint('chat2.livetex.ru', 443, 'https', '/');
   endpoints = [endpoint1, endpoint2]
-  clientEntity = ClientEntity('5468', 'visitor')
+  application = VisitorApplication()
+  application.token = 'some_token'
+  application.application = 'application'
+  application.key = 'api_key'
   
   transport.open()
 
@@ -46,7 +49,7 @@ try:
 
   print 'get endpoints is ok ' + str(client.getEndpoints(service, environment))
 
-  client.changeEnvironment(clientEntity, environment)
+  client.changeVisitorApplicationEnvironment(application, environment)
   print 'change environment is ok'
 
   transport.close()

@@ -3,10 +3,15 @@ sys.path.append('gen-py')
 
 from livetex.dialog.ttypes import *
 from livetex.operator.ttypes import *
+from livetex.department.ttypes import *
+from livetex.dialog_state.ttypes import *
+from livetex.conversation.ttypes import *
+from livetex.message.ttypes import *
 
 class DialogHandler:
   operator1 = Operator()
   operator2 = Operator()
+  department = Department()
 
   def __init__(self):
     self.operator1.id = '5745'
@@ -27,26 +32,31 @@ class DialogHandler:
     self.operator2.email = 'example@example.example'
     self.operator2.options = { 'opt1': 'val1' }
 
+    self.department.id = '557'
+    self.department.name = 'some_name'
+    self.department.options = { 'opt1': 'val1' }
+
   def request(self, attributes):
-    pass
+    return DialogState(Conversation(self.operator1, self.department), self.operator2)
+
   def requestOperator(self, operator, attributes):
-    pass
+    return DialogState(Conversation(operator, self.department), self.operator2)
+
   def requestDepartment(self, department, attributes):
-    pass
+    return DialogState(Conversation(self.operator1, department), self.operator2)
+
   def close(self):
-    pass
+    return DialogState(Conversation(self.operator2, self.department), self.operator1)
+
   def vote(self, vote):
     pass
   def typing(self, message):
     pass
   def sendTextMessage(self, text):
     textMessage = TextMessage()
-    textMessage.type = TextMessageType.VISITOR_MESSAGE
     textMessage.id = '546'
     textMessage.text = text
     textMessage.timestamp = str(time.time())
-    textMessage.source = self.operator1
-    textMessage.target = self.operator2
     return textMessage
 
   def confirmTextMessage(self, message):
@@ -54,7 +64,6 @@ class DialogHandler:
 
   def messageHistory(self, limit, offset):
     textMessage1 = TextMessage()
-    textMessage1.type = TextMessageType.VISITOR_MESSAGE
     textMessage1.id = '547'
     textMessage1.text = 'Hi there!'
     textMessage1.timestamp = str(time.time() - 500)
@@ -62,10 +71,12 @@ class DialogHandler:
     textMessage1.target = self.operator2
 
     textMessage2 = TextMessage()
-    textMessage2.type = TextMessageType.MEMBER_MESSAGE
     textMessage2.id = '548'
     textMessage2.text = 'Can i help you?'
     textMessage2.timestamp = str(time.time())
     textMessage2.source = self.operator2
     textMessage2.target = self.operator1
     return [textMessage1, textMessage2]
+
+  def getState(self):
+    return DialogState(Conversation(self.operator1, self.department), self.operator2)

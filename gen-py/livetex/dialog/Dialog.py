@@ -37,12 +37,12 @@ class Iface:
     """
     pass
 
-  def requestOperator(self, operator, attributes):
+  def requestEmployee(self, employee, attributes):
     """
     Запрос диалога с конкретным оператором.
 
 
-    @param operator - оператор, к которым необходимо начать диалог.
+    @param employee - оператор, к которым необходимо начать диалог.
 
     @param attributes - данные сопутствующие диалогу.
 
@@ -50,7 +50,7 @@ class Iface:
       случае неверных атрибутов диалога или при указании невалидного оператора.
 
     Parameters:
-     - operator
+     - employee
      - attributes
     """
     pass
@@ -217,12 +217,12 @@ class Client(Iface):
       raise result.error
     raise TApplicationException(TApplicationException.MISSING_RESULT, "request failed: unknown result");
 
-  def requestOperator(self, operator, attributes):
+  def requestEmployee(self, employee, attributes):
     """
     Запрос диалога с конкретным оператором.
 
 
-    @param operator - оператор, к которым необходимо начать диалог.
+    @param employee - оператор, к которым необходимо начать диалог.
 
     @param attributes - данные сопутствующие диалогу.
 
@@ -230,36 +230,36 @@ class Client(Iface):
       случае неверных атрибутов диалога или при указании невалидного оператора.
 
     Parameters:
-     - operator
+     - employee
      - attributes
     """
-    self.send_requestOperator(operator, attributes)
-    return self.recv_requestOperator()
+    self.send_requestEmployee(employee, attributes)
+    return self.recv_requestEmployee()
 
-  def send_requestOperator(self, operator, attributes):
-    self._oprot.writeMessageBegin('requestOperator', TMessageType.CALL, self._seqid)
-    args = requestOperator_args()
-    args.operator = operator
+  def send_requestEmployee(self, employee, attributes):
+    self._oprot.writeMessageBegin('requestEmployee', TMessageType.CALL, self._seqid)
+    args = requestEmployee_args()
+    args.employee = employee
     args.attributes = attributes
     args.write(self._oprot)
     self._oprot.writeMessageEnd()
     self._oprot.trans.flush()
 
-  def recv_requestOperator(self):
+  def recv_requestEmployee(self):
     (fname, mtype, rseqid) = self._iprot.readMessageBegin()
     if mtype == TMessageType.EXCEPTION:
       x = TApplicationException()
       x.read(self._iprot)
       self._iprot.readMessageEnd()
       raise x
-    result = requestOperator_result()
+    result = requestEmployee_result()
     result.read(self._iprot)
     self._iprot.readMessageEnd()
     if result.success is not None:
       return result.success
     if result.error is not None:
       raise result.error
-    raise TApplicationException(TApplicationException.MISSING_RESULT, "requestOperator failed: unknown result");
+    raise TApplicationException(TApplicationException.MISSING_RESULT, "requestEmployee failed: unknown result");
 
   def requestDepartment(self, department, attributes):
     """
@@ -572,7 +572,7 @@ class Processor(Iface, TProcessor):
     self._handler = handler
     self._processMap = {}
     self._processMap["request"] = Processor.process_request
-    self._processMap["requestOperator"] = Processor.process_requestOperator
+    self._processMap["requestEmployee"] = Processor.process_requestEmployee
     self._processMap["requestDepartment"] = Processor.process_requestDepartment
     self._processMap["close"] = Processor.process_close
     self._processMap["vote"] = Processor.process_vote
@@ -611,16 +611,16 @@ class Processor(Iface, TProcessor):
     oprot.writeMessageEnd()
     oprot.trans.flush()
 
-  def process_requestOperator(self, seqid, iprot, oprot):
-    args = requestOperator_args()
+  def process_requestEmployee(self, seqid, iprot, oprot):
+    args = requestEmployee_args()
     args.read(iprot)
     iprot.readMessageEnd()
-    result = requestOperator_result()
+    result = requestEmployee_result()
     try:
-      result.success = self._handler.requestOperator(args.operator, args.attributes)
+      result.success = self._handler.requestEmployee(args.employee, args.attributes)
     except ChatError, error:
       result.error = error
-    oprot.writeMessageBegin("requestOperator", TMessageType.REPLY, seqid)
+    oprot.writeMessageBegin("requestEmployee", TMessageType.REPLY, seqid)
     result.write(oprot)
     oprot.writeMessageEnd()
     oprot.trans.flush()
@@ -874,21 +874,21 @@ class request_result:
   def __ne__(self, other):
     return not (self == other)
 
-class requestOperator_args:
+class requestEmployee_args:
   """
   Attributes:
-   - operator
+   - employee
    - attributes
   """
 
   thrift_spec = (
     None, # 0
-    (1, TType.STRUCT, 'operator', (livetex.operator.ttypes.Operator, livetex.operator.ttypes.Operator.thrift_spec), None, ), # 1
+    (1, TType.STRUCT, 'employee', (livetex.employee.ttypes.Employee, livetex.employee.ttypes.Employee.thrift_spec), None, ), # 1
     (2, TType.STRUCT, 'attributes', (DialogAttributes, DialogAttributes.thrift_spec), None, ), # 2
   )
 
-  def __init__(self, operator=None, attributes=None,):
-    self.operator = operator
+  def __init__(self, employee=None, attributes=None,):
+    self.employee = employee
     self.attributes = attributes
 
   def read(self, iprot):
@@ -902,8 +902,8 @@ class requestOperator_args:
         break
       if fid == 1:
         if ftype == TType.STRUCT:
-          self.operator = livetex.operator.ttypes.Operator()
-          self.operator.read(iprot)
+          self.employee = livetex.employee.ttypes.Employee()
+          self.employee.read(iprot)
         else:
           iprot.skip(ftype)
       elif fid == 2:
@@ -921,10 +921,10 @@ class requestOperator_args:
     if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
-    oprot.writeStructBegin('requestOperator_args')
-    if self.operator is not None:
-      oprot.writeFieldBegin('operator', TType.STRUCT, 1)
-      self.operator.write(oprot)
+    oprot.writeStructBegin('requestEmployee_args')
+    if self.employee is not None:
+      oprot.writeFieldBegin('employee', TType.STRUCT, 1)
+      self.employee.write(oprot)
       oprot.writeFieldEnd()
     if self.attributes is not None:
       oprot.writeFieldBegin('attributes', TType.STRUCT, 2)
@@ -948,7 +948,7 @@ class requestOperator_args:
   def __ne__(self, other):
     return not (self == other)
 
-class requestOperator_result:
+class requestEmployee_result:
   """
   Attributes:
    - success
@@ -994,7 +994,7 @@ class requestOperator_result:
     if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
-    oprot.writeStructBegin('requestOperator_result')
+    oprot.writeStructBegin('requestEmployee_result')
     if self.success is not None:
       oprot.writeFieldBegin('success', TType.STRUCT, 0)
       self.success.write(oprot)

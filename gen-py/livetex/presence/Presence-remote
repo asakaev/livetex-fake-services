@@ -24,9 +24,9 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
   print('Usage: ' + sys.argv[0] + ' [-h host[:port]] [-u url] [-f[ramed]] [-s[sl]] function [arg1 [arg2...]]')
   print('')
   print('Functions:')
-  print('   getOperators(Status status)')
+  print('   getEmployees(Status status)')
   print('   getDepartments(Status status)')
-  print('   getDepartmentOperators(Department department)')
+  print('   getDepartmentEmployees(Department department)')
   print('')
   sys.exit(0)
 
@@ -83,11 +83,11 @@ protocol = TBinaryProtocol.TBinaryProtocol(transport)
 client = Presence.Client(protocol)
 transport.open()
 
-if cmd == 'getOperators':
+if cmd == 'getEmployees':
   if len(args) != 1:
-    print('getOperators requires 1 args')
+    print('getEmployees requires 1 args')
     sys.exit(1)
-  pp.pprint(client.getOperators(eval(args[0]),))
+  pp.pprint(client.getEmployees(eval(args[0]),))
 
 elif cmd == 'getDepartments':
   if len(args) != 1:
@@ -95,11 +95,11 @@ elif cmd == 'getDepartments':
     sys.exit(1)
   pp.pprint(client.getDepartments(eval(args[0]),))
 
-elif cmd == 'getDepartmentOperators':
+elif cmd == 'getDepartmentEmployees':
   if len(args) != 1:
-    print('getDepartmentOperators requires 1 args')
+    print('getDepartmentEmployees requires 1 args')
     sys.exit(1)
-  pp.pprint(client.getDepartmentOperators(eval(args[0]),))
+  pp.pprint(client.getDepartmentEmployees(eval(args[0]),))
 
 else:
   print('Unrecognized method %s' % cmd)

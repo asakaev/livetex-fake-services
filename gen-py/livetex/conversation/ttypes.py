@@ -8,7 +8,7 @@
 #
 
 from thrift.Thrift import TType, TMessageType, TException, TApplicationException
-import livetex.operator.ttypes
+import livetex.employee.ttypes
 import livetex.department.ttypes
 
 
@@ -25,23 +25,23 @@ class Conversation:
   """
   Обращение клиента.
 
-  operator: обращение с указанием конкретного оператора.
+  employee: обращение с указанием конкретного оператора.
 
   department: обращение с указанием конкретного департамента.
 
   Attributes:
-   - operator
+   - Employee
    - department
   """
 
   thrift_spec = (
     None, # 0
-    (1, TType.STRUCT, 'operator', (livetex.operator.ttypes.Operator, livetex.operator.ttypes.Operator.thrift_spec), None, ), # 1
+    (1, TType.STRUCT, 'Employee', (livetex.employee.ttypes.Employee, livetex.employee.ttypes.Employee.thrift_spec), None, ), # 1
     (2, TType.STRUCT, 'department', (livetex.department.ttypes.Department, livetex.department.ttypes.Department.thrift_spec), None, ), # 2
   )
 
-  def __init__(self, operator=None, department=None,):
-    self.operator = operator
+  def __init__(self, Employee=None, department=None,):
+    self.Employee = Employee
     self.department = department
 
   def read(self, iprot):
@@ -55,8 +55,8 @@ class Conversation:
         break
       if fid == 1:
         if ftype == TType.STRUCT:
-          self.operator = livetex.operator.ttypes.Operator()
-          self.operator.read(iprot)
+          self.Employee = livetex.employee.ttypes.Employee()
+          self.Employee.read(iprot)
         else:
           iprot.skip(ftype)
       elif fid == 2:
@@ -75,9 +75,9 @@ class Conversation:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
     oprot.writeStructBegin('Conversation')
-    if self.operator is not None:
-      oprot.writeFieldBegin('operator', TType.STRUCT, 1)
-      self.operator.write(oprot)
+    if self.Employee is not None:
+      oprot.writeFieldBegin('Employee', TType.STRUCT, 1)
+      self.Employee.write(oprot)
       oprot.writeFieldEnd()
     if self.department is not None:
       oprot.writeFieldBegin('department', TType.STRUCT, 2)

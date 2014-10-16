@@ -9,7 +9,7 @@ from thrift.protocol import TJSONProtocol
 from thrift.server import THttpServer
 
 from livetex.dialog.ttypes import *
-from livetex.operator.ttypes import *
+from livetex.employee.ttypes import *
 from livetex.department.ttypes import *
 from livetex.vote.ttypes import *
 
@@ -27,13 +27,13 @@ try:
   department = Department('56', 'some_name', { 'opt1': 'val1' })
   status = 'some_status'
 
-  operators = client.getOperators(status)
+  operators = client.getEmployees(status)
   print 'getOperators is ok: ' + str(operators)[:50] + '...'
 
   departments = client.getDepartments(status)
   print 'getDepartments is ok: ' + str(departments)[:50] + '...'
 
-  departmentOperators = client.getDepartmentOperators(department)
+  departmentOperators = client.getDepartmentEmployees(department)
   print 'getDepartmentOpeartors is ok: ' + str(departmentOperators)[:50] + '...'
 
 

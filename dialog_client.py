@@ -9,7 +9,7 @@ from thrift.protocol import TJSONProtocol
 from thrift.server import THttpServer
 
 from livetex.dialog.ttypes import *
-from livetex.operator.ttypes import *
+from livetex.employee.ttypes import *
 from livetex.department.ttypes import *
 from livetex.vote.ttypes import *
 from livetex.message.ttypes import *
@@ -26,15 +26,15 @@ try:
   transport.open()
 
   dialogAttributes = DialogAttributes()
-  operator = Operator()
-  operator.id = '5745'
-  operator.status = 'some_status_1'
-  operator.firstname = 'Piter'
-  operator.lastname = 'Parker'
-  operator.avatar = 'http://billing.env-02.unstable/Images/icons/icon-no-oper.png'
-  operator.phone = '545-8874-854'
-  operator.email = 'example@example.example'
-  operator.options = { 'opt1': 'val1' }
+  employee = Employee()
+  employee.id = '5745'
+  employee.status = 'some_status_1'
+  employee.firstname = 'Piter'
+  employee.lastname = 'Parker'
+  employee.avatar = 'http://billing.env-02.unstable/Images/icons/icon-no-oper.png'
+  employee.phone = '545-8874-854'
+  employee.email = 'example@example.example'
+  employee.options = { 'opt1': 'val1' }
   department = Department('56', 'some_name', { 'opt1': 'val1' })
   vote = Vote(VoteType.GOOD, 'some good message')
   typingMessage = TypingMessage('Typing is awesome')
@@ -42,7 +42,7 @@ try:
   client.request(dialogAttributes)
   print 'request is ok'
 
-  client.requestOperator(operator, dialogAttributes)
+  client.requestEmployee(employee, dialogAttributes)
   print 'requestOperator is ok'
 
   client.requestDepartment(department, dialogAttributes)

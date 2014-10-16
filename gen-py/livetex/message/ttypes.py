@@ -8,7 +8,7 @@
 #
 
 from thrift.Thrift import TType, TMessageType, TException, TApplicationException
-import livetex.operator.ttypes
+import livetex.employee.ttypes
 import livetex.url.ttypes
 import livetex.timestamp.ttypes
 
@@ -192,7 +192,7 @@ class TextMessage:
     (1, TType.STRING, 'id', None, None, ), # 1
     (2, TType.STRING, 'text', None, None, ), # 2
     (3, TType.STRING, 'timestamp', None, None, ), # 3
-    (4, TType.STRUCT, 'sender', (livetex.operator.ttypes.Operator, livetex.operator.ttypes.Operator.thrift_spec), None, ), # 4
+    (4, TType.STRUCT, 'sender', (livetex.employee.ttypes.Employee, livetex.employee.ttypes.Employee.thrift_spec), None, ), # 4
   )
 
   def __init__(self, id=None, text=None, timestamp=None, sender=None,):
@@ -227,7 +227,7 @@ class TextMessage:
           iprot.skip(ftype)
       elif fid == 4:
         if ftype == TType.STRUCT:
-          self.sender = livetex.operator.ttypes.Operator()
+          self.sender = livetex.employee.ttypes.Employee()
           self.sender.read(iprot)
         else:
           iprot.skip(ftype)
@@ -311,7 +311,7 @@ class FileMessage:
     (2, TType.STRING, 'text', None, None, ), # 2
     (3, TType.STRING, 'timestamp', None, None, ), # 3
     (4, TType.STRING, 'url', None, None, ), # 4
-    (5, TType.STRUCT, 'sender', (livetex.operator.ttypes.Operator, livetex.operator.ttypes.Operator.thrift_spec), None, ), # 5
+    (5, TType.STRUCT, 'sender', (livetex.employee.ttypes.Employee, livetex.employee.ttypes.Employee.thrift_spec), None, ), # 5
   )
 
   def __init__(self, id=None, text=None, timestamp=None, url=None, sender=None,):
@@ -352,7 +352,7 @@ class FileMessage:
           iprot.skip(ftype)
       elif fid == 5:
         if ftype == TType.STRUCT:
-          self.sender = livetex.operator.ttypes.Operator()
+          self.sender = livetex.employee.ttypes.Employee()
           self.sender.read(iprot)
         else:
           iprot.skip(ftype)

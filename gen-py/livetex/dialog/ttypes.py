@@ -8,7 +8,7 @@
 #
 
 from thrift.Thrift import TType, TMessageType, TException, TApplicationException
-import livetex.operator.ttypes
+import livetex.employee.ttypes
 import livetex.department.ttypes
 import livetex.timestamp.ttypes
 import livetex.vote.ttypes

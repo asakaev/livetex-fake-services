@@ -22,7 +22,7 @@ class Iface:
   """
   Сервис присутствия и статичной конфигурации.
   """
-  def getOperators(self, status):
+  def getEmployees(self, status):
     """
     Получение списка операторов с указанным статусом.
 
@@ -47,7 +47,7 @@ class Iface:
     """
     pass
 
-  def getDepartmentOperators(self, department):
+  def getDepartmentEmployees(self, department):
     """
     Получение списка операторов привязанных к указанному департаменту.
 
@@ -70,7 +70,7 @@ class Client(Iface):
       self._oprot = oprot
     self._seqid = 0
 
-  def getOperators(self, status):
+  def getEmployees(self, status):
     """
     Получение списка операторов с указанным статусом.
 
@@ -80,30 +80,30 @@ class Client(Iface):
     Parameters:
      - status
     """
-    self.send_getOperators(status)
-    return self.recv_getOperators()
+    self.send_getEmployees(status)
+    return self.recv_getEmployees()
 
-  def send_getOperators(self, status):
-    self._oprot.writeMessageBegin('getOperators', TMessageType.CALL, self._seqid)
-    args = getOperators_args()
+  def send_getEmployees(self, status):
+    self._oprot.writeMessageBegin('getEmployees', TMessageType.CALL, self._seqid)
+    args = getEmployees_args()
     args.status = status
     args.write(self._oprot)
     self._oprot.writeMessageEnd()
     self._oprot.trans.flush()
 
-  def recv_getOperators(self):
+  def recv_getEmployees(self):
     (fname, mtype, rseqid) = self._iprot.readMessageBegin()
     if mtype == TMessageType.EXCEPTION:
       x = TApplicationException()
       x.read(self._iprot)
       self._iprot.readMessageEnd()
       raise x
-    result = getOperators_result()
+    result = getEmployees_result()
     result.read(self._iprot)
     self._iprot.readMessageEnd()
     if result.success is not None:
       return result.success
-    raise TApplicationException(TApplicationException.MISSING_RESULT, "getOperators failed: unknown result");
+    raise TApplicationException(TApplicationException.MISSING_RESULT, "getEmployees failed: unknown result");
 
   def getDepartments(self, status):
     """
@@ -141,7 +141,7 @@ class Client(Iface):
       return result.success
     raise TApplicationException(TApplicationException.MISSING_RESULT, "getDepartments failed: unknown result");
 
-  def getDepartmentOperators(self, department):
+  def getDepartmentEmployees(self, department):
     """
     Получение списка операторов привязанных к указанному департаменту.
 
@@ -151,39 +151,39 @@ class Client(Iface):
     Parameters:
      - department
     """
-    self.send_getDepartmentOperators(department)
-    return self.recv_getDepartmentOperators()
+    self.send_getDepartmentEmployees(department)
+    return self.recv_getDepartmentEmployees()
 
-  def send_getDepartmentOperators(self, department):
-    self._oprot.writeMessageBegin('getDepartmentOperators', TMessageType.CALL, self._seqid)
-    args = getDepartmentOperators_args()
+  def send_getDepartmentEmployees(self, department):
+    self._oprot.writeMessageBegin('getDepartmentEmployees', TMessageType.CALL, self._seqid)
+    args = getDepartmentEmployees_args()
     args.department = department
     args.write(self._oprot)
     self._oprot.writeMessageEnd()
     self._oprot.trans.flush()
 
-  def recv_getDepartmentOperators(self):
+  def recv_getDepartmentEmployees(self):
     (fname, mtype, rseqid) = self._iprot.readMessageBegin()
     if mtype == TMessageType.EXCEPTION:
       x = TApplicationException()
       x.read(self._iprot)
       self._iprot.readMessageEnd()
       raise x
-    result = getDepartmentOperators_result()
+    result = getDepartmentEmployees_result()
     result.read(self._iprot)
     self._iprot.readMessageEnd()
     if result.success is not None:
       return result.success
-    raise TApplicationException(TApplicationException.MISSING_RESULT, "getDepartmentOperators failed: unknown result");
+    raise TApplicationException(TApplicationException.MISSING_RESULT, "getDepartmentEmployees failed: unknown result");
 
 
 class Processor(Iface, TProcessor):
   def __init__(self, handler):
     self._handler = handler
     self._processMap = {}
-    self._processMap["getOperators"] = Processor.process_getOperators
+    self._processMap["getEmployees"] = Processor.process_getEmployees
     self._processMap["getDepartments"] = Processor.process_getDepartments
-    self._processMap["getDepartmentOperators"] = Processor.process_getDepartmentOperators
+    self._processMap["getDepartmentEmployees"] = Processor.process_getDepartmentEmployees
 
   def process(self, iprot, oprot):
     (name, type, seqid) = iprot.readMessageBegin()
@@ -200,13 +200,13 @@ class Processor(Iface, TProcessor):
       self._processMap[name](self, seqid, iprot, oprot)
     return True
 
-  def process_getOperators(self, seqid, iprot, oprot):
-    args = getOperators_args()
+  def process_getEmployees(self, seqid, iprot, oprot):
+    args = getEmployees_args()
     args.read(iprot)
     iprot.readMessageEnd()
-    result = getOperators_result()
-    result.success = self._handler.getOperators(args.status)
-    oprot.writeMessageBegin("getOperators", TMessageType.REPLY, seqid)
+    result = getEmployees_result()
+    result.success = self._handler.getEmployees(args.status)
+    oprot.writeMessageBegin("getEmployees", TMessageType.REPLY, seqid)
     result.write(oprot)
     oprot.writeMessageEnd()
     oprot.trans.flush()
@@ -222,13 +222,13 @@ class Processor(Iface, TProcessor):
     oprot.writeMessageEnd()
     oprot.trans.flush()
 
-  def process_getDepartmentOperators(self, seqid, iprot, oprot):
-    args = getDepartmentOperators_args()
+  def process_getDepartmentEmployees(self, seqid, iprot, oprot):
+    args = getDepartmentEmployees_args()
     args.read(iprot)
     iprot.readMessageEnd()
-    result = getDepartmentOperators_result()
-    result.success = self._handler.getDepartmentOperators(args.department)
-    oprot.writeMessageBegin("getDepartmentOperators", TMessageType.REPLY, seqid)
+    result = getDepartmentEmployees_result()
+    result.success = self._handler.getDepartmentEmployees(args.department)
+    oprot.writeMessageBegin("getDepartmentEmployees", TMessageType.REPLY, seqid)
     result.write(oprot)
     oprot.writeMessageEnd()
     oprot.trans.flush()
@@ -236,7 +236,7 @@ class Processor(Iface, TProcessor):
 
 # HELPER FUNCTIONS AND STRUCTURES
 
-class getOperators_args:
+class getEmployees_args:
   """
   Attributes:
    - status
@@ -273,7 +273,7 @@ class getOperators_args:
     if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
-    oprot.writeStructBegin('getOperators_args')
+    oprot.writeStructBegin('getEmployees_args')
     if self.status is not None:
       oprot.writeFieldBegin('status', TType.STRING, 1)
       oprot.writeString(self.status)
@@ -296,14 +296,14 @@ class getOperators_args:
   def __ne__(self, other):
     return not (self == other)
 
-class getOperators_result:
+class getEmployees_result:
   """
   Attributes:
    - success
   """
 
   thrift_spec = (
-    (0, TType.LIST, 'success', (TType.STRUCT,(livetex.operator.ttypes.Operator, livetex.operator.ttypes.Operator.thrift_spec)), None, ), # 0
+    (0, TType.LIST, 'success', (TType.STRUCT,(livetex.employee.ttypes.Employee, livetex.employee.ttypes.Employee.thrift_spec)), None, ), # 0
   )
 
   def __init__(self, success=None,):
@@ -323,7 +323,7 @@ class getOperators_result:
           self.success = []
           (_etype3, _size0) = iprot.readListBegin()
           for _i4 in xrange(_size0):
-            _elem5 = livetex.operator.ttypes.Operator()
+            _elem5 = livetex.employee.ttypes.Employee()
             _elem5.read(iprot)
             self.success.append(_elem5)
           iprot.readListEnd()
@@ -338,7 +338,7 @@ class getOperators_result:
     if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
-    oprot.writeStructBegin('getOperators_result')
+    oprot.writeStructBegin('getEmployees_result')
     if self.success is not None:
       oprot.writeFieldBegin('success', TType.LIST, 0)
       oprot.writeListBegin(TType.STRUCT, len(self.success))
@@ -492,7 +492,7 @@ class getDepartments_result:
   def __ne__(self, other):
     return not (self == other)
 
-class getDepartmentOperators_args:
+class getDepartmentEmployees_args:
   """
   Attributes:
    - department
@@ -530,7 +530,7 @@ class getDepartmentOperators_args:
     if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
-    oprot.writeStructBegin('getDepartmentOperators_args')
+    oprot.writeStructBegin('getDepartmentEmployees_args')
     if self.department is not None:
       oprot.writeFieldBegin('department', TType.STRUCT, 1)
       self.department.write(oprot)
@@ -553,14 +553,14 @@ class getDepartmentOperators_args:
   def __ne__(self, other):
     return not (self == other)
 
-class getDepartmentOperators_result:
+class getDepartmentEmployees_result:
   """
   Attributes:
    - success
   """
 
   thrift_spec = (
-    (0, TType.LIST, 'success', (TType.STRUCT,(livetex.operator.ttypes.Operator, livetex.operator.ttypes.Operator.thrift_spec)), None, ), # 0
+    (0, TType.LIST, 'success', (TType.STRUCT,(livetex.employee.ttypes.Employee, livetex.employee.ttypes.Employee.thrift_spec)), None, ), # 0
   )
 
   def __init__(self, success=None,):
@@ -580,7 +580,7 @@ class getDepartmentOperators_result:
           self.success = []
           (_etype17, _size14) = iprot.readListBegin()
           for _i18 in xrange(_size14):
-            _elem19 = livetex.operator.ttypes.Operator()
+            _elem19 = livetex.employee.ttypes.Employee()
             _elem19.read(iprot)
             self.success.append(_elem19)
           iprot.readListEnd()
@@ -595,7 +595,7 @@ class getDepartmentOperators_result:
     if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
-    oprot.writeStructBegin('getDepartmentOperators_result')
+    oprot.writeStructBegin('getDepartmentEmployees_result')
     if self.success is not None:
       oprot.writeFieldBegin('success', TType.LIST, 0)
       oprot.writeListBegin(TType.STRUCT, len(self.success))

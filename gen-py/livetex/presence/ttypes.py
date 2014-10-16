@@ -9,7 +9,7 @@
 
 from thrift.Thrift import TType, TMessageType, TException, TApplicationException
 import livetex.status.ttypes
-import livetex.operator.ttypes
+import livetex.employee.ttypes
 import livetex.department.ttypes
 
 

@@ -8,7 +8,7 @@
 #
 
 from thrift.Thrift import TType, TMessageType, TException, TApplicationException
-import livetex.operator.ttypes
+import livetex.employee.ttypes
 import livetex.conversation.ttypes
 
 
@@ -29,24 +29,24 @@ class DialogState:
     то интерфейс в состоянии NoConversation, если обращение присутствует,
     то возможно одно из состояний: ConversationQueued или ConversationActive.
 
-  operator: оператор назначенный диалогу. Если оператора есть,
+  employee: оператор назначенный диалогу. Если оператора есть,
     то состояние ConversationActive, если оператора нет, то возможно
     одно из состояний: NoConversation или ConversationQueued.
 
   Attributes:
    - conversation
-   - operator
+   - employee
   """
 
   thrift_spec = (
     None, # 0
     (1, TType.STRUCT, 'conversation', (livetex.conversation.ttypes.Conversation, livetex.conversation.ttypes.Conversation.thrift_spec), None, ), # 1
-    (2, TType.STRUCT, 'operator', (livetex.operator.ttypes.Operator, livetex.operator.ttypes.Operator.thrift_spec), None, ), # 2
+    (2, TType.STRUCT, 'employee', (livetex.employee.ttypes.Employee, livetex.employee.ttypes.Employee.thrift_spec), None, ), # 2
   )
 
-  def __init__(self, conversation=None, operator=None,):
+  def __init__(self, conversation=None, employee=None,):
     self.conversation = conversation
-    self.operator = operator
+    self.employee = employee
 
   def read(self, iprot):
     if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
@@ -65,8 +65,8 @@ class DialogState:
           iprot.skip(ftype)
       elif fid == 2:
         if ftype == TType.STRUCT:
-          self.operator = livetex.operator.ttypes.Operator()
-          self.operator.read(iprot)
+          self.employee = livetex.employee.ttypes.Employee()
+          self.employee.read(iprot)
         else:
           iprot.skip(ftype)
       else:
@@ -83,9 +83,9 @@ class DialogState:
       oprot.writeFieldBegin('conversation', TType.STRUCT, 1)
       self.conversation.write(oprot)
       oprot.writeFieldEnd()
-    if self.operator is not None:
-      oprot.writeFieldBegin('operator', TType.STRUCT, 2)
-      self.operator.write(oprot)
+    if self.employee is not None:
+      oprot.writeFieldBegin('employee', TType.STRUCT, 2)
+      self.employee.write(oprot)
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()

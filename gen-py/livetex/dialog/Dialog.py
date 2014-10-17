@@ -883,7 +883,7 @@ class requestEmployee_args:
 
   thrift_spec = (
     None, # 0
-    (1, TType.STRUCT, 'employee', (livetex.employee.ttypes.Employee, livetex.employee.ttypes.Employee.thrift_spec), None, ), # 1
+    (1, TType.STRING, 'employee', None, None, ), # 1
     (2, TType.STRUCT, 'attributes', (DialogAttributes, DialogAttributes.thrift_spec), None, ), # 2
   )
 
@@ -901,9 +901,8 @@ class requestEmployee_args:
       if ftype == TType.STOP:
         break
       if fid == 1:
-        if ftype == TType.STRUCT:
-          self.employee = livetex.employee.ttypes.Employee()
-          self.employee.read(iprot)
+        if ftype == TType.STRING:
+          self.employee = iprot.readString();
         else:
           iprot.skip(ftype)
       elif fid == 2:
@@ -923,8 +922,8 @@ class requestEmployee_args:
       return
     oprot.writeStructBegin('requestEmployee_args')
     if self.employee is not None:
-      oprot.writeFieldBegin('employee', TType.STRUCT, 1)
-      self.employee.write(oprot)
+      oprot.writeFieldBegin('employee', TType.STRING, 1)
+      oprot.writeString(self.employee)
       oprot.writeFieldEnd()
     if self.attributes is not None:
       oprot.writeFieldBegin('attributes', TType.STRUCT, 2)
@@ -1030,7 +1029,7 @@ class requestDepartment_args:
 
   thrift_spec = (
     None, # 0
-    (1, TType.STRUCT, 'department', (livetex.department.ttypes.Department, livetex.department.ttypes.Department.thrift_spec), None, ), # 1
+    (1, TType.STRING, 'department', None, None, ), # 1
     (2, TType.STRUCT, 'attributes', (DialogAttributes, DialogAttributes.thrift_spec), None, ), # 2
   )
 
@@ -1048,9 +1047,8 @@ class requestDepartment_args:
       if ftype == TType.STOP:
         break
       if fid == 1:
-        if ftype == TType.STRUCT:
-          self.department = livetex.department.ttypes.Department()
-          self.department.read(iprot)
+        if ftype == TType.STRING:
+          self.department = iprot.readString();
         else:
           iprot.skip(ftype)
       elif fid == 2:
@@ -1070,8 +1068,8 @@ class requestDepartment_args:
       return
     oprot.writeStructBegin('requestDepartment_args')
     if self.department is not None:
-      oprot.writeFieldBegin('department', TType.STRUCT, 1)
-      self.department.write(oprot)
+      oprot.writeFieldBegin('department', TType.STRING, 1)
+      oprot.writeString(self.department)
       oprot.writeFieldEnd()
     if self.attributes is not None:
       oprot.writeFieldBegin('attributes', TType.STRUCT, 2)
@@ -1668,7 +1666,7 @@ class confirmTextMessage_args:
 
   thrift_spec = (
     None, # 0
-    (1, TType.STRUCT, 'message', (livetex.message.ttypes.TextMessage, livetex.message.ttypes.TextMessage.thrift_spec), None, ), # 1
+    (1, TType.STRING, 'message', None, None, ), # 1
   )
 
   def __init__(self, message=None,):
@@ -1684,9 +1682,8 @@ class confirmTextMessage_args:
       if ftype == TType.STOP:
         break
       if fid == 1:
-        if ftype == TType.STRUCT:
-          self.message = livetex.message.ttypes.TextMessage()
-          self.message.read(iprot)
+        if ftype == TType.STRING:
+          self.message = iprot.readString();
         else:
           iprot.skip(ftype)
       else:
@@ -1700,8 +1697,8 @@ class confirmTextMessage_args:
       return
     oprot.writeStructBegin('confirmTextMessage_args')
     if self.message is not None:
-      oprot.writeFieldBegin('message', TType.STRUCT, 1)
-      self.message.write(oprot)
+      oprot.writeFieldBegin('message', TType.STRING, 1)
+      oprot.writeString(self.message)
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()

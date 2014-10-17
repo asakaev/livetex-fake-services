@@ -22,30 +22,22 @@ try:
   protocol = TBinaryProtocol.TBinaryProtocol(transport)
 
   client = Dialog.Client(protocol)
-  
+
   transport.open()
 
   dialogAttributes = DialogAttributes()
-  employee = Employee()
-  employee.id = '5745'
-  employee.status = 'some_status_1'
-  employee.firstname = 'Piter'
-  employee.lastname = 'Parker'
-  employee.avatar = 'http://billing.env-02.unstable/Images/icons/icon-no-oper.png'
-  employee.phone = '545-8874-854'
-  employee.email = 'example@example.example'
-  employee.options = { 'opt1': 'val1' }
-  department = Department('56', 'some_name', { 'opt1': 'val1' })
+  employeeId = '5678'
+  departmentId = '56'
   vote = Vote(VoteType.GOOD, 'some good message')
   typingMessage = TypingMessage('Typing is awesome')
-  
+
   client.request(dialogAttributes)
   print 'request is ok'
 
-  client.requestEmployee(employee, dialogAttributes)
+  client.requestEmployee(employeeId, dialogAttributes)
   print 'requestOperator is ok'
 
-  client.requestDepartment(department, dialogAttributes)
+  client.requestDepartment(departmentId, dialogAttributes)
   print 'requestDepartment is ok'
 
   client.close()
@@ -60,7 +52,7 @@ try:
   textMessage = client.sendTextMessage('some text')
   print 'sendTextMessage is ok: ' + str(textMessage)
 
-  client.confirmTextMessage(textMessage)
+  client.confirmTextMessage(textMessage.id)
   print 'confirmTextMessage is ok'
 
   history = client.messageHistory(16, 16)
@@ -70,5 +62,4 @@ try:
   print 'getState is ok'
 
 except Thrift.TException, tx:
-  
   print '%s' % (tx.message)

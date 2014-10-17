@@ -30,18 +30,18 @@ class Conversation:
   department: обращение с указанием конкретного департамента.
 
   Attributes:
-   - Employee
+   - employee
    - department
   """
 
   thrift_spec = (
     None, # 0
-    (1, TType.STRUCT, 'Employee', (livetex.employee.ttypes.Employee, livetex.employee.ttypes.Employee.thrift_spec), None, ), # 1
+    (1, TType.STRUCT, 'employee', (livetex.employee.ttypes.Employee, livetex.employee.ttypes.Employee.thrift_spec), None, ), # 1
     (2, TType.STRUCT, 'department', (livetex.department.ttypes.Department, livetex.department.ttypes.Department.thrift_spec), None, ), # 2
   )
 
-  def __init__(self, Employee=None, department=None,):
-    self.Employee = Employee
+  def __init__(self, employee=None, department=None,):
+    self.employee = employee
     self.department = department
 
   def read(self, iprot):
@@ -55,8 +55,8 @@ class Conversation:
         break
       if fid == 1:
         if ftype == TType.STRUCT:
-          self.Employee = livetex.employee.ttypes.Employee()
-          self.Employee.read(iprot)
+          self.employee = livetex.employee.ttypes.Employee()
+          self.employee.read(iprot)
         else:
           iprot.skip(ftype)
       elif fid == 2:
@@ -75,9 +75,9 @@ class Conversation:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
     oprot.writeStructBegin('Conversation')
-    if self.Employee is not None:
-      oprot.writeFieldBegin('Employee', TType.STRUCT, 1)
-      self.Employee.write(oprot)
+    if self.employee is not None:
+      oprot.writeFieldBegin('employee', TType.STRUCT, 1)
+      self.employee.write(oprot)
       oprot.writeFieldEnd()
     if self.department is not None:
       oprot.writeFieldBegin('department', TType.STRUCT, 2)

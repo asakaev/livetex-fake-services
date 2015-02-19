@@ -13,7 +13,7 @@ import livetex.token.ttypes
 import livetex.livetex_service.ttypes
 import livetex.environment.ttypes
 import livetex.endpoint.ttypes
-import livetex.client_entity.ttypes
+import livetex.account.ttypes
 
 
 from thrift.transport import TTransport
@@ -36,18 +36,21 @@ class CheckTokenResult:
 
   Attributes:
    - result
-   - options
+   - services
+   - serviceOptions
   """
 
   thrift_spec = (
     None, # 0
     (1, TType.BOOL, 'result', None, None, ), # 1
-    (2, TType.MAP, 'options', (TType.STRING,None,TType.STRING,None), None, ), # 2
+    (2, TType.MAP, 'services', (TType.I32,None,TType.STRUCT,(livetex.endpoint.ttypes.Endpoint, livetex.endpoint.ttypes.Endpoint.thrift_spec)), None, ), # 2
+    (3, TType.STRUCT, 'serviceOptions', (livetex.livetex_service.ttypes.ServiceOptions, livetex.livetex_service.ttypes.ServiceOptions.thrift_spec), None, ), # 3
   )
 
-  def __init__(self, result=None, options=None,):
+  def __init__(self, result=None, services=None, serviceOptions=None,):
     self.result = result
-    self.options = options
+    self.services = services
+    self.serviceOptions = serviceOptions
 
   def read(self, iprot):
     if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
@@ -65,13 +68,20 @@ class CheckTokenResult:
           iprot.skip(ftype)
       elif fid == 2:
         if ftype == TType.MAP:
-          self.options = {}
+          self.services = {}
           (_ktype1, _vtype2, _size0 ) = iprot.readMapBegin()
           for _i4 in xrange(_size0):
-            _key5 = iprot.readString();
-            _val6 = iprot.readString();
-            self.options[_key5] = _val6
+            _key5 = iprot.readI32();
+            _val6 = livetex.endpoint.ttypes.Endpoint()
+            _val6.read(iprot)
+            self.services[_key5] = _val6
           iprot.readMapEnd()
+        else:
+          iprot.skip(ftype)
+      elif fid == 3:
+        if ftype == TType.STRUCT:
+          self.serviceOptions = livetex.livetex_service.ttypes.ServiceOptions()
+          self.serviceOptions.read(iprot)
         else:
           iprot.skip(ftype)
       else:
@@ -88,13 +98,17 @@ class CheckTokenResult:
       oprot.writeFieldBegin('result', TType.BOOL, 1)
       oprot.writeBool(self.result)
       oprot.writeFieldEnd()
-    if self.options is not None:
-      oprot.writeFieldBegin('options', TType.MAP, 2)
-      oprot.writeMapBegin(TType.STRING, TType.STRING, len(self.options))
-      for kiter7,viter8 in self.options.items():
-        oprot.writeString(kiter7)
-        oprot.writeString(viter8)
+    if self.services is not None:
+      oprot.writeFieldBegin('services', TType.MAP, 2)
+      oprot.writeMapBegin(TType.I32, TType.STRUCT, len(self.services))
+      for kiter7,viter8 in self.services.items():
+        oprot.writeI32(kiter7)
+        viter8.write(oprot)
       oprot.writeMapEnd()
+      oprot.writeFieldEnd()
+    if self.serviceOptions is not None:
+      oprot.writeFieldBegin('serviceOptions', TType.STRUCT, 3)
+      self.serviceOptions.write(oprot)
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()
@@ -102,6 +116,8 @@ class CheckTokenResult:
   def validate(self):
     if self.result is None:
       raise TProtocol.TProtocolException(message='Required field result is unset!')
+    if self.services is None:
+      raise TProtocol.TProtocolException(message='Required field services is unset!')
     return
 
 

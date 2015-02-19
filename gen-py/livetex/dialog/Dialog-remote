@@ -28,7 +28,8 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
   print('  DialogState requestEmployee(EmployeeId employee, DialogAttributes attributes)')
   print('  DialogState requestDepartment(DepartmentId department, DialogAttributes attributes)')
   print('  DialogState close()')
-  print('  void vote(Vote vote)')
+  print('  void vote(VoteType voteType)')
+  print('  void abuse(Abuse abuse)')
   print('  void typing(TypingMessage message)')
   print('  TextMessage sendTextMessage(string text)')
   print('  void confirmTextMessage(TextMessageId message)')
@@ -119,6 +120,12 @@ elif cmd == 'vote':
     print('vote requires 1 args')
     sys.exit(1)
   pp.pprint(client.vote(eval(args[0]),))
+
+elif cmd == 'abuse':
+  if len(args) != 1:
+    print('abuse requires 1 args')
+    sys.exit(1)
+  pp.pprint(client.abuse(eval(args[0]),))
 
 elif cmd == 'typing':
   if len(args) != 1:

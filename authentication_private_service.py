@@ -6,7 +6,7 @@ from livetex.endpoint.ttypes import *
 
 class AuthenticationPrivateHandler:
   def removeToken(self, token):
-    pass
+    print 'token is' + token;
 
   def checkToken(self, token):
     result = CheckTokenResult()

@@ -8,6 +8,8 @@
 #
 
 from thrift.Thrift import TType, TMessageType, TException, TApplicationException
+import livetex.device.ttypes
+
 
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol, TProtocol
@@ -35,12 +37,14 @@ class LivetexService:
   VISITOR = 1
   PRESENCE = 2
   NOTIFICATION = 3
+  PUSH_NOTIFICATION = 4
 
   _VALUES_TO_NAMES = {
     0: "DIALOG",
     1: "VISITOR",
     2: "PRESENCE",
     3: "NOTIFICATION",
+    4: "PUSH_NOTIFICATION",
   }
 
   _NAMES_TO_VALUES = {
@@ -48,5 +52,157 @@ class LivetexService:
     "VISITOR": 1,
     "PRESENCE": 2,
     "NOTIFICATION": 3,
+    "PUSH_NOTIFICATION": 4,
   }
 
+
+class PushNotificationServiceOptions:
+  """
+  Опции сервиса PUSH-оповещений.
+
+  Attributes:
+   - sdkKey
+   - deviceId
+   - deviceType
+  """
+
+  thrift_spec = (
+    None, # 0
+    (1, TType.STRING, 'sdkKey', None, None, ), # 1
+    (2, TType.STRING, 'deviceId', None, None, ), # 2
+    (3, TType.I32, 'deviceType', None, None, ), # 3
+  )
+
+  def __init__(self, sdkKey=None, deviceId=None, deviceType=None,):
+    self.sdkKey = sdkKey
+    self.deviceId = deviceId
+    self.deviceType = deviceType
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 1:
+        if ftype == TType.STRING:
+          self.sdkKey = iprot.readString();
+        else:
+          iprot.skip(ftype)
+      elif fid == 2:
+        if ftype == TType.STRING:
+          self.deviceId = iprot.readString();
+        else:
+          iprot.skip(ftype)
+      elif fid == 3:
+        if ftype == TType.I32:
+          self.deviceType = iprot.readI32();
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('PushNotificationServiceOptions')
+    if self.sdkKey is not None:
+      oprot.writeFieldBegin('sdkKey', TType.STRING, 1)
+      oprot.writeString(self.sdkKey)
+      oprot.writeFieldEnd()
+    if self.deviceId is not None:
+      oprot.writeFieldBegin('deviceId', TType.STRING, 2)
+      oprot.writeString(self.deviceId)
+      oprot.writeFieldEnd()
+    if self.deviceType is not None:
+      oprot.writeFieldBegin('deviceType', TType.I32, 3)
+      oprot.writeI32(self.deviceType)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    if self.sdkKey is None:
+      raise TProtocol.TProtocolException(message='Required field sdkKey is unset!')
+    return
+
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class ServiceOptions:
+  """
+  Обобщенные опции сервисов.
+
+  Attributes:
+   - pushNotificationServiceOptions
+  """
+
+  thrift_spec = (
+    None, # 0
+    (1, TType.STRUCT, 'pushNotificationServiceOptions', (PushNotificationServiceOptions, PushNotificationServiceOptions.thrift_spec), None, ), # 1
+  )
+
+  def __init__(self, pushNotificationServiceOptions=None,):
+    self.pushNotificationServiceOptions = pushNotificationServiceOptions
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 1:
+        if ftype == TType.STRUCT:
+          self.pushNotificationServiceOptions = PushNotificationServiceOptions()
+          self.pushNotificationServiceOptions.read(iprot)
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('ServiceOptions')
+    if self.pushNotificationServiceOptions is not None:
+      oprot.writeFieldBegin('pushNotificationServiceOptions', TType.STRUCT, 1)
+      self.pushNotificationServiceOptions.write(oprot)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)

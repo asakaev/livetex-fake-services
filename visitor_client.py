@@ -12,8 +12,11 @@ from livetex.visitor_data import Visitor
 
 try:
 
-  transport = THttpClient.THttpClient('http://localhost:10060/')
-  protocol = TBinaryProtocol.TBinaryProtocol(transport)
+  # transport = THttpClient.THttpClient('http://sdk.livetex.ru:10070/account:123445:site:89200:visitor:ggrh5reh2cutmx6r')
+  # transport = THttpClient.THttpClient('http://192.168.78.14:10070/account:5832:site:10005638:visitor:edww0pjo8pno2yb9')
+  transport = THttpClient.THttpClient('http://localhost:10070/account:5832:site:10005638:visitor:0arvucc7sx9u23xr')
+  # protocol = TBinaryProtocol.TBinaryProtocol(transport)
+  protocol = TJSONProtocol.TJSONProtocol(transport)
 
   client = Visitor.Client(protocol)
   

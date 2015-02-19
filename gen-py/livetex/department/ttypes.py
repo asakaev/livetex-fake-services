@@ -25,27 +25,27 @@ class Department:
   Департамент - множестов операторов.
 
 
-  id: уникальный идентификатор депертамента.
+  departmentId: уникальный идентификатор депертамента.
 
   name: имя департамента.
 
   options: опциональные аттрибуты департамента.
 
   Attributes:
-   - id
+   - departmentId
    - name
    - options
   """
 
   thrift_spec = (
     None, # 0
-    (1, TType.STRING, 'id', None, None, ), # 1
+    (1, TType.STRING, 'departmentId', None, None, ), # 1
     (2, TType.STRING, 'name', None, None, ), # 2
     (3, TType.MAP, 'options', (TType.STRING,None,TType.STRING,None), None, ), # 3
   )
 
-  def __init__(self, id=None, name=None, options=None,):
-    self.id = id
+  def __init__(self, departmentId=None, name=None, options=None,):
+    self.departmentId = departmentId
     self.name = name
     self.options = options
 
@@ -60,7 +60,7 @@ class Department:
         break
       if fid == 1:
         if ftype == TType.STRING:
-          self.id = iprot.readString();
+          self.departmentId = iprot.readString();
         else:
           iprot.skip(ftype)
       elif fid == 2:
@@ -89,9 +89,9 @@ class Department:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
     oprot.writeStructBegin('Department')
-    if self.id is not None:
-      oprot.writeFieldBegin('id', TType.STRING, 1)
-      oprot.writeString(self.id)
+    if self.departmentId is not None:
+      oprot.writeFieldBegin('departmentId', TType.STRING, 1)
+      oprot.writeString(self.departmentId)
       oprot.writeFieldEnd()
     if self.name is not None:
       oprot.writeFieldBegin('name', TType.STRING, 2)
@@ -109,8 +109,8 @@ class Department:
     oprot.writeStructEnd()
 
   def validate(self):
-    if self.id is None:
-      raise TProtocol.TProtocolException(message='Required field id is unset!')
+    if self.departmentId is None:
+      raise TProtocol.TProtocolException(message='Required field departmentId is unset!')
     if self.name is None:
       raise TProtocol.TProtocolException(message='Required field name is unset!')
     return

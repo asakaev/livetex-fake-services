@@ -34,7 +34,7 @@ class Iface:
     """
     pass
 
-  def updateDialogState(self, state):
+  def updateDialogState(self, dialogState):
     """
     Оповещение об изменении состояния сервиса диалога.
 
@@ -42,7 +42,7 @@ class Iface:
     @param state - новое состояние интерфейса сервиса диалога.
 
     Parameters:
-     - state
+     - dialogState
     """
     pass
 
@@ -70,7 +70,7 @@ class Iface:
     """
     pass
 
-  def confirmTextMessage(self, message):
+  def confirmTextMessage(self, messageId):
     """
     Оповещение о подтверждении переданного текстовом сообщении.
 
@@ -78,7 +78,7 @@ class Iface:
     @param message - текстовое cообещение.
 
     Parameters:
-     - message
+     - messageId
     """
     pass
 
@@ -128,7 +128,6 @@ class Client(Iface):
      - message
     """
     self.send_ban(message)
-    self.recv_ban()
 
   def send_ban(self, message):
     self._oprot.writeMessageBegin('ban', TMessageType.CALL, self._seqid)
@@ -137,20 +136,7 @@ class Client(Iface):
     args.write(self._oprot)
     self._oprot.writeMessageEnd()
     self._oprot.trans.flush()
-
-  def recv_ban(self):
-    (fname, mtype, rseqid) = self._iprot.readMessageBegin()
-    if mtype == TMessageType.EXCEPTION:
-      x = TApplicationException()
-      x.read(self._iprot)
-      self._iprot.readMessageEnd()
-      raise x
-    result = ban_result()
-    result.read(self._iprot)
-    self._iprot.readMessageEnd()
-    return
-
-  def updateDialogState(self, state):
+  def updateDialogState(self, dialogState):
     """
     Оповещение об изменении состояния сервиса диалога.
 
@@ -158,31 +144,17 @@ class Client(Iface):
     @param state - новое состояние интерфейса сервиса диалога.
 
     Parameters:
-     - state
+     - dialogState
     """
-    self.send_updateDialogState(state)
-    self.recv_updateDialogState()
+    self.send_updateDialogState(dialogState)
 
-  def send_updateDialogState(self, state):
+  def send_updateDialogState(self, dialogState):
     self._oprot.writeMessageBegin('updateDialogState', TMessageType.CALL, self._seqid)
     args = updateDialogState_args()
-    args.state = state
+    args.dialogState = dialogState
     args.write(self._oprot)
     self._oprot.writeMessageEnd()
     self._oprot.trans.flush()
-
-  def recv_updateDialogState(self):
-    (fname, mtype, rseqid) = self._iprot.readMessageBegin()
-    if mtype == TMessageType.EXCEPTION:
-      x = TApplicationException()
-      x.read(self._iprot)
-      self._iprot.readMessageEnd()
-      raise x
-    result = updateDialogState_result()
-    result.read(self._iprot)
-    self._iprot.readMessageEnd()
-    return
-
   def receiveFileMessage(self, message):
     """
     Оповещение о переданном файле.
@@ -194,7 +166,6 @@ class Client(Iface):
      - message
     """
     self.send_receiveFileMessage(message)
-    self.recv_receiveFileMessage()
 
   def send_receiveFileMessage(self, message):
     self._oprot.writeMessageBegin('receiveFileMessage', TMessageType.CALL, self._seqid)
@@ -203,19 +174,6 @@ class Client(Iface):
     args.write(self._oprot)
     self._oprot.writeMessageEnd()
     self._oprot.trans.flush()
-
-  def recv_receiveFileMessage(self):
-    (fname, mtype, rseqid) = self._iprot.readMessageBegin()
-    if mtype == TMessageType.EXCEPTION:
-      x = TApplicationException()
-      x.read(self._iprot)
-      self._iprot.readMessageEnd()
-      raise x
-    result = receiveFileMessage_result()
-    result.read(self._iprot)
-    self._iprot.readMessageEnd()
-    return
-
   def receiveTextMessage(self, message):
     """
     Оповещение о переданном текстовом сообщении.
@@ -227,7 +185,6 @@ class Client(Iface):
      - message
     """
     self.send_receiveTextMessage(message)
-    self.recv_receiveTextMessage()
 
   def send_receiveTextMessage(self, message):
     self._oprot.writeMessageBegin('receiveTextMessage', TMessageType.CALL, self._seqid)
@@ -236,20 +193,7 @@ class Client(Iface):
     args.write(self._oprot)
     self._oprot.writeMessageEnd()
     self._oprot.trans.flush()
-
-  def recv_receiveTextMessage(self):
-    (fname, mtype, rseqid) = self._iprot.readMessageBegin()
-    if mtype == TMessageType.EXCEPTION:
-      x = TApplicationException()
-      x.read(self._iprot)
-      self._iprot.readMessageEnd()
-      raise x
-    result = receiveTextMessage_result()
-    result.read(self._iprot)
-    self._iprot.readMessageEnd()
-    return
-
-  def confirmTextMessage(self, message):
+  def confirmTextMessage(self, messageId):
     """
     Оповещение о подтверждении переданного текстовом сообщении.
 
@@ -257,31 +201,17 @@ class Client(Iface):
     @param message - текстовое cообещение.
 
     Parameters:
-     - message
+     - messageId
     """
-    self.send_confirmTextMessage(message)
-    self.recv_confirmTextMessage()
+    self.send_confirmTextMessage(messageId)
 
-  def send_confirmTextMessage(self, message):
+  def send_confirmTextMessage(self, messageId):
     self._oprot.writeMessageBegin('confirmTextMessage', TMessageType.CALL, self._seqid)
     args = confirmTextMessage_args()
-    args.message = message
+    args.messageId = messageId
     args.write(self._oprot)
     self._oprot.writeMessageEnd()
     self._oprot.trans.flush()
-
-  def recv_confirmTextMessage(self):
-    (fname, mtype, rseqid) = self._iprot.readMessageBegin()
-    if mtype == TMessageType.EXCEPTION:
-      x = TApplicationException()
-      x.read(self._iprot)
-      self._iprot.readMessageEnd()
-      raise x
-    result = confirmTextMessage_result()
-    result.read(self._iprot)
-    self._iprot.readMessageEnd()
-    return
-
   def receiveHoldMessage(self, message):
     """
     Оповещение о новом удерживающем сообщении.
@@ -293,7 +223,6 @@ class Client(Iface):
      - message
     """
     self.send_receiveHoldMessage(message)
-    self.recv_receiveHoldMessage()
 
   def send_receiveHoldMessage(self, message):
     self._oprot.writeMessageBegin('receiveHoldMessage', TMessageType.CALL, self._seqid)
@@ -302,19 +231,6 @@ class Client(Iface):
     args.write(self._oprot)
     self._oprot.writeMessageEnd()
     self._oprot.trans.flush()
-
-  def recv_receiveHoldMessage(self):
-    (fname, mtype, rseqid) = self._iprot.readMessageBegin()
-    if mtype == TMessageType.EXCEPTION:
-      x = TApplicationException()
-      x.read(self._iprot)
-      self._iprot.readMessageEnd()
-      raise x
-    result = receiveHoldMessage_result()
-    result.read(self._iprot)
-    self._iprot.readMessageEnd()
-    return
-
   def receiveTypingMessage(self, message):
     """
     Оповещение о наборе текста.
@@ -326,7 +242,6 @@ class Client(Iface):
      - message
     """
     self.send_receiveTypingMessage(message)
-    self.recv_receiveTypingMessage()
 
   def send_receiveTypingMessage(self, message):
     self._oprot.writeMessageBegin('receiveTypingMessage', TMessageType.CALL, self._seqid)
@@ -335,19 +250,6 @@ class Client(Iface):
     args.write(self._oprot)
     self._oprot.writeMessageEnd()
     self._oprot.trans.flush()
-
-  def recv_receiveTypingMessage(self):
-    (fname, mtype, rseqid) = self._iprot.readMessageBegin()
-    if mtype == TMessageType.EXCEPTION:
-      x = TApplicationException()
-      x.read(self._iprot)
-      self._iprot.readMessageEnd()
-      raise x
-    result = receiveTypingMessage_result()
-    result.read(self._iprot)
-    self._iprot.readMessageEnd()
-    return
-
 
 class Processor(Iface, TProcessor):
   def __init__(self, handler):
@@ -380,78 +282,50 @@ class Processor(Iface, TProcessor):
     args = ban_args()
     args.read(iprot)
     iprot.readMessageEnd()
-    result = ban_result()
     self._handler.ban(args.message)
-    oprot.writeMessageBegin("ban", TMessageType.REPLY, seqid)
-    result.write(oprot)
-    oprot.writeMessageEnd()
-    oprot.trans.flush()
+    return
 
   def process_updateDialogState(self, seqid, iprot, oprot):
     args = updateDialogState_args()
     args.read(iprot)
     iprot.readMessageEnd()
-    result = updateDialogState_result()
-    self._handler.updateDialogState(args.state)
-    oprot.writeMessageBegin("updateDialogState", TMessageType.REPLY, seqid)
-    result.write(oprot)
-    oprot.writeMessageEnd()
-    oprot.trans.flush()
+    self._handler.updateDialogState(args.dialogState)
+    return
 
   def process_receiveFileMessage(self, seqid, iprot, oprot):
     args = receiveFileMessage_args()
     args.read(iprot)
     iprot.readMessageEnd()
-    result = receiveFileMessage_result()
     self._handler.receiveFileMessage(args.message)
-    oprot.writeMessageBegin("receiveFileMessage", TMessageType.REPLY, seqid)
-    result.write(oprot)
-    oprot.writeMessageEnd()
-    oprot.trans.flush()
+    return
 
   def process_receiveTextMessage(self, seqid, iprot, oprot):
     args = receiveTextMessage_args()
     args.read(iprot)
     iprot.readMessageEnd()
-    result = receiveTextMessage_result()
     self._handler.receiveTextMessage(args.message)
-    oprot.writeMessageBegin("receiveTextMessage", TMessageType.REPLY, seqid)
-    result.write(oprot)
-    oprot.writeMessageEnd()
-    oprot.trans.flush()
+    return
 
   def process_confirmTextMessage(self, seqid, iprot, oprot):
     args = confirmTextMessage_args()
     args.read(iprot)
     iprot.readMessageEnd()
-    result = confirmTextMessage_result()
-    self._handler.confirmTextMessage(args.message)
-    oprot.writeMessageBegin("confirmTextMessage", TMessageType.REPLY, seqid)
-    result.write(oprot)
-    oprot.writeMessageEnd()
-    oprot.trans.flush()
+    self._handler.confirmTextMessage(args.messageId)
+    return
 
   def process_receiveHoldMessage(self, seqid, iprot, oprot):
     args = receiveHoldMessage_args()
     args.read(iprot)
     iprot.readMessageEnd()
-    result = receiveHoldMessage_result()
     self._handler.receiveHoldMessage(args.message)
-    oprot.writeMessageBegin("receiveHoldMessage", TMessageType.REPLY, seqid)
-    result.write(oprot)
-    oprot.writeMessageEnd()
-    oprot.trans.flush()
+    return
 
   def process_receiveTypingMessage(self, seqid, iprot, oprot):
     args = receiveTypingMessage_args()
     args.read(iprot)
     iprot.readMessageEnd()
-    result = receiveTypingMessage_result()
     self._handler.receiveTypingMessage(args.message)
-    oprot.writeMessageBegin("receiveTypingMessage", TMessageType.REPLY, seqid)
-    result.write(oprot)
-    oprot.writeMessageEnd()
-    oprot.trans.flush()
+    return
 
 
 # HELPER FUNCTIONS AND STRUCTURES
@@ -516,61 +390,19 @@ class ban_args:
   def __ne__(self, other):
     return not (self == other)
 
-class ban_result:
-
-  thrift_spec = (
-  )
-
-  def read(self, iprot):
-    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
-      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
-      return
-    iprot.readStructBegin()
-    while True:
-      (fname, ftype, fid) = iprot.readFieldBegin()
-      if ftype == TType.STOP:
-        break
-      else:
-        iprot.skip(ftype)
-      iprot.readFieldEnd()
-    iprot.readStructEnd()
-
-  def write(self, oprot):
-    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
-      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
-      return
-    oprot.writeStructBegin('ban_result')
-    oprot.writeFieldStop()
-    oprot.writeStructEnd()
-
-  def validate(self):
-    return
-
-
-  def __repr__(self):
-    L = ['%s=%r' % (key, value)
-      for key, value in self.__dict__.iteritems()]
-    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
-
-  def __eq__(self, other):
-    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
-
-  def __ne__(self, other):
-    return not (self == other)
-
 class updateDialogState_args:
   """
   Attributes:
-   - state
+   - dialogState
   """
 
   thrift_spec = (
     None, # 0
-    (1, TType.STRUCT, 'state', (livetex.dialog_state.ttypes.DialogState, livetex.dialog_state.ttypes.DialogState.thrift_spec), None, ), # 1
+    (1, TType.STRUCT, 'dialogState', (livetex.dialog_state.ttypes.DialogState, livetex.dialog_state.ttypes.DialogState.thrift_spec), None, ), # 1
   )
 
-  def __init__(self, state=None,):
-    self.state = state
+  def __init__(self, dialogState=None,):
+    self.dialogState = dialogState
 
   def read(self, iprot):
     if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
@@ -583,8 +415,8 @@ class updateDialogState_args:
         break
       if fid == 1:
         if ftype == TType.STRUCT:
-          self.state = livetex.dialog_state.ttypes.DialogState()
-          self.state.read(iprot)
+          self.dialogState = livetex.dialog_state.ttypes.DialogState()
+          self.dialogState.read(iprot)
         else:
           iprot.skip(ftype)
       else:
@@ -597,52 +429,10 @@ class updateDialogState_args:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
     oprot.writeStructBegin('updateDialogState_args')
-    if self.state is not None:
-      oprot.writeFieldBegin('state', TType.STRUCT, 1)
-      self.state.write(oprot)
+    if self.dialogState is not None:
+      oprot.writeFieldBegin('dialogState', TType.STRUCT, 1)
+      self.dialogState.write(oprot)
       oprot.writeFieldEnd()
-    oprot.writeFieldStop()
-    oprot.writeStructEnd()
-
-  def validate(self):
-    return
-
-
-  def __repr__(self):
-    L = ['%s=%r' % (key, value)
-      for key, value in self.__dict__.iteritems()]
-    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
-
-  def __eq__(self, other):
-    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
-
-  def __ne__(self, other):
-    return not (self == other)
-
-class updateDialogState_result:
-
-  thrift_spec = (
-  )
-
-  def read(self, iprot):
-    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
-      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
-      return
-    iprot.readStructBegin()
-    while True:
-      (fname, ftype, fid) = iprot.readFieldBegin()
-      if ftype == TType.STOP:
-        break
-      else:
-        iprot.skip(ftype)
-      iprot.readFieldEnd()
-    iprot.readStructEnd()
-
-  def write(self, oprot):
-    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
-      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
-      return
-    oprot.writeStructBegin('updateDialogState_result')
     oprot.writeFieldStop()
     oprot.writeStructEnd()
 
@@ -722,48 +512,6 @@ class receiveFileMessage_args:
   def __ne__(self, other):
     return not (self == other)
 
-class receiveFileMessage_result:
-
-  thrift_spec = (
-  )
-
-  def read(self, iprot):
-    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
-      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
-      return
-    iprot.readStructBegin()
-    while True:
-      (fname, ftype, fid) = iprot.readFieldBegin()
-      if ftype == TType.STOP:
-        break
-      else:
-        iprot.skip(ftype)
-      iprot.readFieldEnd()
-    iprot.readStructEnd()
-
-  def write(self, oprot):
-    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
-      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
-      return
-    oprot.writeStructBegin('receiveFileMessage_result')
-    oprot.writeFieldStop()
-    oprot.writeStructEnd()
-
-  def validate(self):
-    return
-
-
-  def __repr__(self):
-    L = ['%s=%r' % (key, value)
-      for key, value in self.__dict__.iteritems()]
-    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
-
-  def __eq__(self, other):
-    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
-
-  def __ne__(self, other):
-    return not (self == other)
-
 class receiveTextMessage_args:
   """
   Attributes:
@@ -825,61 +573,19 @@ class receiveTextMessage_args:
   def __ne__(self, other):
     return not (self == other)
 
-class receiveTextMessage_result:
-
-  thrift_spec = (
-  )
-
-  def read(self, iprot):
-    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
-      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
-      return
-    iprot.readStructBegin()
-    while True:
-      (fname, ftype, fid) = iprot.readFieldBegin()
-      if ftype == TType.STOP:
-        break
-      else:
-        iprot.skip(ftype)
-      iprot.readFieldEnd()
-    iprot.readStructEnd()
-
-  def write(self, oprot):
-    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
-      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
-      return
-    oprot.writeStructBegin('receiveTextMessage_result')
-    oprot.writeFieldStop()
-    oprot.writeStructEnd()
-
-  def validate(self):
-    return
-
-
-  def __repr__(self):
-    L = ['%s=%r' % (key, value)
-      for key, value in self.__dict__.iteritems()]
-    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
-
-  def __eq__(self, other):
-    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
-
-  def __ne__(self, other):
-    return not (self == other)
-
 class confirmTextMessage_args:
   """
   Attributes:
-   - message
+   - messageId
   """
 
   thrift_spec = (
     None, # 0
-    (1, TType.STRUCT, 'message', (livetex.message.ttypes.TextMessage, livetex.message.ttypes.TextMessage.thrift_spec), None, ), # 1
+    (1, TType.STRING, 'messageId', None, None, ), # 1
   )
 
-  def __init__(self, message=None,):
-    self.message = message
+  def __init__(self, messageId=None,):
+    self.messageId = messageId
 
   def read(self, iprot):
     if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
@@ -891,9 +597,8 @@ class confirmTextMessage_args:
       if ftype == TType.STOP:
         break
       if fid == 1:
-        if ftype == TType.STRUCT:
-          self.message = livetex.message.ttypes.TextMessage()
-          self.message.read(iprot)
+        if ftype == TType.STRING:
+          self.messageId = iprot.readString();
         else:
           iprot.skip(ftype)
       else:
@@ -906,52 +611,10 @@ class confirmTextMessage_args:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
     oprot.writeStructBegin('confirmTextMessage_args')
-    if self.message is not None:
-      oprot.writeFieldBegin('message', TType.STRUCT, 1)
-      self.message.write(oprot)
+    if self.messageId is not None:
+      oprot.writeFieldBegin('messageId', TType.STRING, 1)
+      oprot.writeString(self.messageId)
       oprot.writeFieldEnd()
-    oprot.writeFieldStop()
-    oprot.writeStructEnd()
-
-  def validate(self):
-    return
-
-
-  def __repr__(self):
-    L = ['%s=%r' % (key, value)
-      for key, value in self.__dict__.iteritems()]
-    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
-
-  def __eq__(self, other):
-    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
-
-  def __ne__(self, other):
-    return not (self == other)
-
-class confirmTextMessage_result:
-
-  thrift_spec = (
-  )
-
-  def read(self, iprot):
-    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
-      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
-      return
-    iprot.readStructBegin()
-    while True:
-      (fname, ftype, fid) = iprot.readFieldBegin()
-      if ftype == TType.STOP:
-        break
-      else:
-        iprot.skip(ftype)
-      iprot.readFieldEnd()
-    iprot.readStructEnd()
-
-  def write(self, oprot):
-    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
-      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
-      return
-    oprot.writeStructBegin('confirmTextMessage_result')
     oprot.writeFieldStop()
     oprot.writeStructEnd()
 
@@ -1031,48 +694,6 @@ class receiveHoldMessage_args:
   def __ne__(self, other):
     return not (self == other)
 
-class receiveHoldMessage_result:
-
-  thrift_spec = (
-  )
-
-  def read(self, iprot):
-    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
-      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
-      return
-    iprot.readStructBegin()
-    while True:
-      (fname, ftype, fid) = iprot.readFieldBegin()
-      if ftype == TType.STOP:
-        break
-      else:
-        iprot.skip(ftype)
-      iprot.readFieldEnd()
-    iprot.readStructEnd()
-
-  def write(self, oprot):
-    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
-      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
-      return
-    oprot.writeStructBegin('receiveHoldMessage_result')
-    oprot.writeFieldStop()
-    oprot.writeStructEnd()
-
-  def validate(self):
-    return
-
-
-  def __repr__(self):
-    L = ['%s=%r' % (key, value)
-      for key, value in self.__dict__.iteritems()]
-    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
-
-  def __eq__(self, other):
-    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
-
-  def __ne__(self, other):
-    return not (self == other)
-
 class receiveTypingMessage_args:
   """
   Attributes:
@@ -1116,48 +737,6 @@ class receiveTypingMessage_args:
       oprot.writeFieldBegin('message', TType.STRUCT, 1)
       self.message.write(oprot)
       oprot.writeFieldEnd()
-    oprot.writeFieldStop()
-    oprot.writeStructEnd()
-
-  def validate(self):
-    return
-
-
-  def __repr__(self):
-    L = ['%s=%r' % (key, value)
-      for key, value in self.__dict__.iteritems()]
-    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
-
-  def __eq__(self, other):
-    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
-
-  def __ne__(self, other):
-    return not (self == other)
-
-class receiveTypingMessage_result:
-
-  thrift_spec = (
-  )
-
-  def read(self, iprot):
-    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
-      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
-      return
-    iprot.readStructBegin()
-    while True:
-      (fname, ftype, fid) = iprot.readFieldBegin()
-      if ftype == TType.STOP:
-        break
-      else:
-        iprot.skip(ftype)
-      iprot.readFieldEnd()
-    iprot.readStructEnd()
-
-  def write(self, oprot):
-    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
-      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
-      return
-    oprot.writeStructBegin('receiveTypingMessage_result')
     oprot.writeFieldStop()
     oprot.writeStructEnd()
 

@@ -13,6 +13,7 @@ import livetex.token.ttypes
 import livetex.livetex_service.ttypes
 import livetex.endpoint.ttypes
 import livetex.client_entity.ttypes
+import livetex.visitor_device.ttypes
 
 
 from thrift.transport import TTransport

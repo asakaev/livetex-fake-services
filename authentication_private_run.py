@@ -11,7 +11,7 @@ from livetex.authentication_private import AuthenticationPrivate
 from authentication_private_service import AuthenticationPrivateHandler
 
 handler = AuthenticationPrivateHandler()
-pfactory = TBinaryProtocol.TBinaryProtocolFactory()
+pfactory = TJSONProtocol.TJSONProtocolFactory()
 processor = AuthenticationPrivate.Processor(handler)
 
 server = THttpServer.THttpServer(processor, ('localhost', 10020), pfactory)

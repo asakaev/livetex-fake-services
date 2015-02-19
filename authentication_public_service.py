@@ -10,7 +10,7 @@ from livetex.authentication_public import AuthenticationPublic
 
 class AuthenticationPublicHandler:
   def getVisitorApplicationToken(self, client):
-    endpoint = Endpoint('chat.livetex.ru', 8080, 'http', '/');
+    endpoint = Endpoint(1, 'chat.livetex.ru', 8080, 'http', '/');
     result = AuthenticationResult()
     result.token = 'some_token'
     result.services = { LivetexService.DIALOG: endpoint }

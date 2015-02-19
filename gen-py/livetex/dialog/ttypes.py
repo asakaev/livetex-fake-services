@@ -12,6 +12,7 @@ import livetex.employee.ttypes
 import livetex.department.ttypes
 import livetex.timestamp.ttypes
 import livetex.vote.ttypes
+import livetex.abuse.ttypes
 import livetex.url.ttypes
 import livetex.options.ttypes
 import livetex.message.ttypes

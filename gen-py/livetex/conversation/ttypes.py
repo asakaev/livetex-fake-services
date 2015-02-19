@@ -25,24 +25,24 @@ class Conversation:
   """
   Обращение клиента.
 
-  employee: обращение с указанием конкретного оператора.
+  employeeId: обращение с указанием конкретного оператора.
 
-  department: обращение с указанием конкретного департамента.
+  departmentId: обращение с указанием конкретного департамента.
 
   Attributes:
-   - employee
-   - department
+   - employeeId
+   - departmentId
   """
 
   thrift_spec = (
     None, # 0
-    (1, TType.STRUCT, 'employee', (livetex.employee.ttypes.Employee, livetex.employee.ttypes.Employee.thrift_spec), None, ), # 1
-    (2, TType.STRUCT, 'department', (livetex.department.ttypes.Department, livetex.department.ttypes.Department.thrift_spec), None, ), # 2
+    (1, TType.STRING, 'employeeId', None, None, ), # 1
+    (2, TType.STRING, 'departmentId', None, None, ), # 2
   )
 
-  def __init__(self, employee=None, department=None,):
-    self.employee = employee
-    self.department = department
+  def __init__(self, employeeId=None, departmentId=None,):
+    self.employeeId = employeeId
+    self.departmentId = departmentId
 
   def read(self, iprot):
     if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
@@ -54,15 +54,13 @@ class Conversation:
       if ftype == TType.STOP:
         break
       if fid == 1:
-        if ftype == TType.STRUCT:
-          self.employee = livetex.employee.ttypes.Employee()
-          self.employee.read(iprot)
+        if ftype == TType.STRING:
+          self.employeeId = iprot.readString();
         else:
           iprot.skip(ftype)
       elif fid == 2:
-        if ftype == TType.STRUCT:
-          self.department = livetex.department.ttypes.Department()
-          self.department.read(iprot)
+        if ftype == TType.STRING:
+          self.departmentId = iprot.readString();
         else:
           iprot.skip(ftype)
       else:
@@ -75,13 +73,13 @@ class Conversation:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
     oprot.writeStructBegin('Conversation')
-    if self.employee is not None:
-      oprot.writeFieldBegin('employee', TType.STRUCT, 1)
-      self.employee.write(oprot)
+    if self.employeeId is not None:
+      oprot.writeFieldBegin('employeeId', TType.STRING, 1)
+      oprot.writeString(self.employeeId)
       oprot.writeFieldEnd()
-    if self.department is not None:
-      oprot.writeFieldBegin('department', TType.STRUCT, 2)
-      self.department.write(oprot)
+    if self.departmentId is not None:
+      oprot.writeFieldBegin('departmentId', TType.STRING, 2)
+      oprot.writeString(self.departmentId)
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()

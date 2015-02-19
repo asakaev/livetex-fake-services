@@ -35,19 +35,22 @@ class Iface:
     """
     pass
 
-  def checkToken(self, token):
+  def checkVisitorToken(self, token, endpoint):
     """
     Проверка валидности токена авторизации.
 
 
     @param token - токен, валидность которого необходимо проверить.
 
+    @param endpoint - точка входа в сервис.
+
     Parameters:
      - token
+     - endpoint
     """
     pass
 
-  def addEndpoints(self, serv, environment, endpoints):
+  def addEndpoint(self, environment, endpoint):
     """
     Добавление новой точки входа в сервис для указанного окружения.
 
@@ -56,16 +59,15 @@ class Iface:
 
     @param environment - окружение, к которому будет привязана указанная точка входа в сервис.
 
-    @param endpoints - список точек входа в сервис.
+    @param endpoint - точка входа в сервис.
 
     Parameters:
-     - serv
      - environment
-     - endpoints
+     - endpoint
     """
     pass
 
-  def removeEndpoints(self, serv, environment, endpoints):
+  def removeEndpoint(self, environment, endpoint):
     """
     Удаление точки входа в сервис для указанного окружения.
 
@@ -74,12 +76,11 @@ class Iface:
 
     @param environment - окружение, для которого будет отвязана указанная точка входа в сервис.
 
-    @param endpoints - список точек входа в сервис.
+    @param endpoint - точка входа в сервис.
 
     Parameters:
-     - serv
      - environment
-     - endpoints
+     - endpoint
     """
     pass
 
@@ -98,17 +99,17 @@ class Iface:
     """
     pass
 
-  def changeVisitorApplicationEnvironment(self, visitorApplication, environment):
+  def changeAccountEnvironment(self, accountId, environment):
     """
-    Перенос приложения посетителя на новое окружение.
+    Перенос аккаунта на новое окружение.
 
 
-    @param visitorApplication - клиент, которого необходимо перенести на новое окружение.
+    @param accountId - аккаунт, который необходимо перенести на новое окружение.
 
     @param environment - окружение, на которое будет перенесен клиент.
 
     Parameters:
-     - visitorApplication
+     - accountId
      - environment
     """
     pass
@@ -158,42 +159,46 @@ class Client(Iface):
     self._iprot.readMessageEnd()
     return
 
-  def checkToken(self, token):
+  def checkVisitorToken(self, token, endpoint):
     """
     Проверка валидности токена авторизации.
 
 
     @param token - токен, валидность которого необходимо проверить.
 
+    @param endpoint - точка входа в сервис.
+
     Parameters:
      - token
+     - endpoint
     """
-    self.send_checkToken(token)
-    return self.recv_checkToken()
+    self.send_checkVisitorToken(token, endpoint)
+    return self.recv_checkVisitorToken()
 
-  def send_checkToken(self, token):
-    self._oprot.writeMessageBegin('checkToken', TMessageType.CALL, self._seqid)
-    args = checkToken_args()
+  def send_checkVisitorToken(self, token, endpoint):
+    self._oprot.writeMessageBegin('checkVisitorToken', TMessageType.CALL, self._seqid)
+    args = checkVisitorToken_args()
     args.token = token
+    args.endpoint = endpoint
     args.write(self._oprot)
     self._oprot.writeMessageEnd()
     self._oprot.trans.flush()
 
-  def recv_checkToken(self):
+  def recv_checkVisitorToken(self):
     (fname, mtype, rseqid) = self._iprot.readMessageBegin()
     if mtype == TMessageType.EXCEPTION:
       x = TApplicationException()
       x.read(self._iprot)
       self._iprot.readMessageEnd()
       raise x
-    result = checkToken_result()
+    result = checkVisitorToken_result()
     result.read(self._iprot)
     self._iprot.readMessageEnd()
     if result.success is not None:
       return result.success
-    raise TApplicationException(TApplicationException.MISSING_RESULT, "checkToken failed: unknown result");
+    raise TApplicationException(TApplicationException.MISSING_RESULT, "checkVisitorToken failed: unknown result");
 
-  def addEndpoints(self, serv, environment, endpoints):
+  def addEndpoint(self, environment, endpoint):
     """
     Добавление новой точки входа в сервис для указанного окружения.
 
@@ -202,39 +207,37 @@ class Client(Iface):
 
     @param environment - окружение, к которому будет привязана указанная точка входа в сервис.
 
-    @param endpoints - список точек входа в сервис.
+    @param endpoint - точка входа в сервис.
 
     Parameters:
-     - serv
      - environment
-     - endpoints
+     - endpoint
     """
-    self.send_addEndpoints(serv, environment, endpoints)
-    self.recv_addEndpoints()
+    self.send_addEndpoint(environment, endpoint)
+    self.recv_addEndpoint()
 
-  def send_addEndpoints(self, serv, environment, endpoints):
-    self._oprot.writeMessageBegin('addEndpoints', TMessageType.CALL, self._seqid)
-    args = addEndpoints_args()
-    args.serv = serv
+  def send_addEndpoint(self, environment, endpoint):
+    self._oprot.writeMessageBegin('addEndpoint', TMessageType.CALL, self._seqid)
+    args = addEndpoint_args()
     args.environment = environment
-    args.endpoints = endpoints
+    args.endpoint = endpoint
     args.write(self._oprot)
     self._oprot.writeMessageEnd()
     self._oprot.trans.flush()
 
-  def recv_addEndpoints(self):
+  def recv_addEndpoint(self):
     (fname, mtype, rseqid) = self._iprot.readMessageBegin()
     if mtype == TMessageType.EXCEPTION:
       x = TApplicationException()
       x.read(self._iprot)
       self._iprot.readMessageEnd()
       raise x
-    result = addEndpoints_result()
+    result = addEndpoint_result()
     result.read(self._iprot)
     self._iprot.readMessageEnd()
     return
 
-  def removeEndpoints(self, serv, environment, endpoints):
+  def removeEndpoint(self, environment, endpoint):
     """
     Удаление точки входа в сервис для указанного окружения.
 
@@ -243,34 +246,32 @@ class Client(Iface):
 
     @param environment - окружение, для которого будет отвязана указанная точка входа в сервис.
 
-    @param endpoints - список точек входа в сервис.
+    @param endpoint - точка входа в сервис.
 
     Parameters:
-     - serv
      - environment
-     - endpoints
+     - endpoint
     """
-    self.send_removeEndpoints(serv, environment, endpoints)
-    self.recv_removeEndpoints()
+    self.send_removeEndpoint(environment, endpoint)
+    self.recv_removeEndpoint()
 
-  def send_removeEndpoints(self, serv, environment, endpoints):
-    self._oprot.writeMessageBegin('removeEndpoints', TMessageType.CALL, self._seqid)
-    args = removeEndpoints_args()
-    args.serv = serv
+  def send_removeEndpoint(self, environment, endpoint):
+    self._oprot.writeMessageBegin('removeEndpoint', TMessageType.CALL, self._seqid)
+    args = removeEndpoint_args()
     args.environment = environment
-    args.endpoints = endpoints
+    args.endpoint = endpoint
     args.write(self._oprot)
     self._oprot.writeMessageEnd()
     self._oprot.trans.flush()
 
-  def recv_removeEndpoints(self):
+  def recv_removeEndpoint(self):
     (fname, mtype, rseqid) = self._iprot.readMessageBegin()
     if mtype == TMessageType.EXCEPTION:
       x = TApplicationException()
       x.read(self._iprot)
       self._iprot.readMessageEnd()
       raise x
-    result = removeEndpoints_result()
+    result = removeEndpoint_result()
     result.read(self._iprot)
     self._iprot.readMessageEnd()
     return
@@ -314,39 +315,39 @@ class Client(Iface):
       return result.success
     raise TApplicationException(TApplicationException.MISSING_RESULT, "getEndpoints failed: unknown result");
 
-  def changeVisitorApplicationEnvironment(self, visitorApplication, environment):
+  def changeAccountEnvironment(self, accountId, environment):
     """
-    Перенос приложения посетителя на новое окружение.
+    Перенос аккаунта на новое окружение.
 
 
-    @param visitorApplication - клиент, которого необходимо перенести на новое окружение.
+    @param accountId - аккаунт, который необходимо перенести на новое окружение.
 
     @param environment - окружение, на которое будет перенесен клиент.
 
     Parameters:
-     - visitorApplication
+     - accountId
      - environment
     """
-    self.send_changeVisitorApplicationEnvironment(visitorApplication, environment)
-    self.recv_changeVisitorApplicationEnvironment()
+    self.send_changeAccountEnvironment(accountId, environment)
+    self.recv_changeAccountEnvironment()
 
-  def send_changeVisitorApplicationEnvironment(self, visitorApplication, environment):
-    self._oprot.writeMessageBegin('changeVisitorApplicationEnvironment', TMessageType.CALL, self._seqid)
-    args = changeVisitorApplicationEnvironment_args()
-    args.visitorApplication = visitorApplication
+  def send_changeAccountEnvironment(self, accountId, environment):
+    self._oprot.writeMessageBegin('changeAccountEnvironment', TMessageType.CALL, self._seqid)
+    args = changeAccountEnvironment_args()
+    args.accountId = accountId
     args.environment = environment
     args.write(self._oprot)
     self._oprot.writeMessageEnd()
     self._oprot.trans.flush()
 
-  def recv_changeVisitorApplicationEnvironment(self):
+  def recv_changeAccountEnvironment(self):
     (fname, mtype, rseqid) = self._iprot.readMessageBegin()
     if mtype == TMessageType.EXCEPTION:
       x = TApplicationException()
       x.read(self._iprot)
       self._iprot.readMessageEnd()
       raise x
-    result = changeVisitorApplicationEnvironment_result()
+    result = changeAccountEnvironment_result()
     result.read(self._iprot)
     self._iprot.readMessageEnd()
     return
@@ -357,11 +358,11 @@ class Processor(Iface, TProcessor):
     self._handler = handler
     self._processMap = {}
     self._processMap["removeToken"] = Processor.process_removeToken
-    self._processMap["checkToken"] = Processor.process_checkToken
-    self._processMap["addEndpoints"] = Processor.process_addEndpoints
-    self._processMap["removeEndpoints"] = Processor.process_removeEndpoints
+    self._processMap["checkVisitorToken"] = Processor.process_checkVisitorToken
+    self._processMap["addEndpoint"] = Processor.process_addEndpoint
+    self._processMap["removeEndpoint"] = Processor.process_removeEndpoint
     self._processMap["getEndpoints"] = Processor.process_getEndpoints
-    self._processMap["changeVisitorApplicationEnvironment"] = Processor.process_changeVisitorApplicationEnvironment
+    self._processMap["changeAccountEnvironment"] = Processor.process_changeAccountEnvironment
 
   def process(self, iprot, oprot):
     (name, type, seqid) = iprot.readMessageBegin()
@@ -389,35 +390,35 @@ class Processor(Iface, TProcessor):
     oprot.writeMessageEnd()
     oprot.trans.flush()
 
-  def process_checkToken(self, seqid, iprot, oprot):
-    args = checkToken_args()
+  def process_checkVisitorToken(self, seqid, iprot, oprot):
+    args = checkVisitorToken_args()
     args.read(iprot)
     iprot.readMessageEnd()
-    result = checkToken_result()
-    result.success = self._handler.checkToken(args.token)
-    oprot.writeMessageBegin("checkToken", TMessageType.REPLY, seqid)
+    result = checkVisitorToken_result()
+    result.success = self._handler.checkVisitorToken(args.token, args.endpoint)
+    oprot.writeMessageBegin("checkVisitorToken", TMessageType.REPLY, seqid)
     result.write(oprot)
     oprot.writeMessageEnd()
     oprot.trans.flush()
 
-  def process_addEndpoints(self, seqid, iprot, oprot):
-    args = addEndpoints_args()
+  def process_addEndpoint(self, seqid, iprot, oprot):
+    args = addEndpoint_args()
     args.read(iprot)
     iprot.readMessageEnd()
-    result = addEndpoints_result()
-    self._handler.addEndpoints(args.serv, args.environment, args.endpoints)
-    oprot.writeMessageBegin("addEndpoints", TMessageType.REPLY, seqid)
+    result = addEndpoint_result()
+    self._handler.addEndpoint(args.environment, args.endpoint)
+    oprot.writeMessageBegin("addEndpoint", TMessageType.REPLY, seqid)
     result.write(oprot)
     oprot.writeMessageEnd()
     oprot.trans.flush()
 
-  def process_removeEndpoints(self, seqid, iprot, oprot):
-    args = removeEndpoints_args()
+  def process_removeEndpoint(self, seqid, iprot, oprot):
+    args = removeEndpoint_args()
     args.read(iprot)
     iprot.readMessageEnd()
-    result = removeEndpoints_result()
-    self._handler.removeEndpoints(args.serv, args.environment, args.endpoints)
-    oprot.writeMessageBegin("removeEndpoints", TMessageType.REPLY, seqid)
+    result = removeEndpoint_result()
+    self._handler.removeEndpoint(args.environment, args.endpoint)
+    oprot.writeMessageBegin("removeEndpoint", TMessageType.REPLY, seqid)
     result.write(oprot)
     oprot.writeMessageEnd()
     oprot.trans.flush()
@@ -433,13 +434,13 @@ class Processor(Iface, TProcessor):
     oprot.writeMessageEnd()
     oprot.trans.flush()
 
-  def process_changeVisitorApplicationEnvironment(self, seqid, iprot, oprot):
-    args = changeVisitorApplicationEnvironment_args()
+  def process_changeAccountEnvironment(self, seqid, iprot, oprot):
+    args = changeAccountEnvironment_args()
     args.read(iprot)
     iprot.readMessageEnd()
-    result = changeVisitorApplicationEnvironment_result()
-    self._handler.changeVisitorApplicationEnvironment(args.visitorApplication, args.environment)
-    oprot.writeMessageBegin("changeVisitorApplicationEnvironment", TMessageType.REPLY, seqid)
+    result = changeAccountEnvironment_result()
+    self._handler.changeAccountEnvironment(args.accountId, args.environment)
+    oprot.writeMessageBegin("changeAccountEnvironment", TMessageType.REPLY, seqid)
     result.write(oprot)
     oprot.writeMessageEnd()
     oprot.trans.flush()
@@ -549,19 +550,22 @@ class removeToken_result:
   def __ne__(self, other):
     return not (self == other)
 
-class checkToken_args:
+class checkVisitorToken_args:
   """
   Attributes:
    - token
+   - endpoint
   """
 
   thrift_spec = (
     None, # 0
     (1, TType.STRING, 'token', None, None, ), # 1
+    (2, TType.STRUCT, 'endpoint', (livetex.endpoint.ttypes.Endpoint, livetex.endpoint.ttypes.Endpoint.thrift_spec), None, ), # 2
   )
 
-  def __init__(self, token=None,):
+  def __init__(self, token=None, endpoint=None,):
     self.token = token
+    self.endpoint = endpoint
 
   def read(self, iprot):
     if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
@@ -577,6 +581,12 @@ class checkToken_args:
           self.token = iprot.readString();
         else:
           iprot.skip(ftype)
+      elif fid == 2:
+        if ftype == TType.STRUCT:
+          self.endpoint = livetex.endpoint.ttypes.Endpoint()
+          self.endpoint.read(iprot)
+        else:
+          iprot.skip(ftype)
       else:
         iprot.skip(ftype)
       iprot.readFieldEnd()
@@ -586,10 +596,14 @@ class checkToken_args:
     if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
-    oprot.writeStructBegin('checkToken_args')
+    oprot.writeStructBegin('checkVisitorToken_args')
     if self.token is not None:
       oprot.writeFieldBegin('token', TType.STRING, 1)
       oprot.writeString(self.token)
+      oprot.writeFieldEnd()
+    if self.endpoint is not None:
+      oprot.writeFieldBegin('endpoint', TType.STRUCT, 2)
+      self.endpoint.write(oprot)
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()
@@ -609,7 +623,7 @@ class checkToken_args:
   def __ne__(self, other):
     return not (self == other)
 
-class checkToken_result:
+class checkVisitorToken_result:
   """
   Attributes:
    - success
@@ -646,7 +660,7 @@ class checkToken_result:
     if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
-    oprot.writeStructBegin('checkToken_result')
+    oprot.writeStructBegin('checkVisitorToken_result')
     if self.success is not None:
       oprot.writeFieldBegin('success', TType.STRUCT, 0)
       self.success.write(oprot)
@@ -669,25 +683,22 @@ class checkToken_result:
   def __ne__(self, other):
     return not (self == other)
 
-class addEndpoints_args:
+class addEndpoint_args:
   """
   Attributes:
-   - serv
    - environment
-   - endpoints
+   - endpoint
   """
 
   thrift_spec = (
     None, # 0
-    (1, TType.I32, 'serv', None, None, ), # 1
-    (2, TType.STRING, 'environment', None, None, ), # 2
-    (3, TType.LIST, 'endpoints', (TType.STRUCT,(livetex.endpoint.ttypes.Endpoint, livetex.endpoint.ttypes.Endpoint.thrift_spec)), None, ), # 3
+    (1, TType.STRING, 'environment', None, None, ), # 1
+    (2, TType.STRUCT, 'endpoint', (livetex.endpoint.ttypes.Endpoint, livetex.endpoint.ttypes.Endpoint.thrift_spec), None, ), # 2
   )
 
-  def __init__(self, serv=None, environment=None, endpoints=None,):
-    self.serv = serv
+  def __init__(self, environment=None, endpoint=None,):
     self.environment = environment
-    self.endpoints = endpoints
+    self.endpoint = endpoint
 
   def read(self, iprot):
     if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
@@ -699,24 +710,14 @@ class addEndpoints_args:
       if ftype == TType.STOP:
         break
       if fid == 1:
-        if ftype == TType.I32:
-          self.serv = iprot.readI32();
-        else:
-          iprot.skip(ftype)
-      elif fid == 2:
         if ftype == TType.STRING:
           self.environment = iprot.readString();
         else:
           iprot.skip(ftype)
-      elif fid == 3:
-        if ftype == TType.LIST:
-          self.endpoints = []
-          (_etype12, _size9) = iprot.readListBegin()
-          for _i13 in xrange(_size9):
-            _elem14 = livetex.endpoint.ttypes.Endpoint()
-            _elem14.read(iprot)
-            self.endpoints.append(_elem14)
-          iprot.readListEnd()
+      elif fid == 2:
+        if ftype == TType.STRUCT:
+          self.endpoint = livetex.endpoint.ttypes.Endpoint()
+          self.endpoint.read(iprot)
         else:
           iprot.skip(ftype)
       else:
@@ -728,21 +729,14 @@ class addEndpoints_args:
     if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
-    oprot.writeStructBegin('addEndpoints_args')
-    if self.serv is not None:
-      oprot.writeFieldBegin('serv', TType.I32, 1)
-      oprot.writeI32(self.serv)
-      oprot.writeFieldEnd()
+    oprot.writeStructBegin('addEndpoint_args')
     if self.environment is not None:
-      oprot.writeFieldBegin('environment', TType.STRING, 2)
+      oprot.writeFieldBegin('environment', TType.STRING, 1)
       oprot.writeString(self.environment)
       oprot.writeFieldEnd()
-    if self.endpoints is not None:
-      oprot.writeFieldBegin('endpoints', TType.LIST, 3)
-      oprot.writeListBegin(TType.STRUCT, len(self.endpoints))
-      for iter15 in self.endpoints:
-        iter15.write(oprot)
-      oprot.writeListEnd()
+    if self.endpoint is not None:
+      oprot.writeFieldBegin('endpoint', TType.STRUCT, 2)
+      self.endpoint.write(oprot)
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()
@@ -762,7 +756,7 @@ class addEndpoints_args:
   def __ne__(self, other):
     return not (self == other)
 
-class addEndpoints_result:
+class addEndpoint_result:
 
   thrift_spec = (
   )
@@ -785,7 +779,7 @@ class addEndpoints_result:
     if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
-    oprot.writeStructBegin('addEndpoints_result')
+    oprot.writeStructBegin('addEndpoint_result')
     oprot.writeFieldStop()
     oprot.writeStructEnd()
 
@@ -804,25 +798,22 @@ class addEndpoints_result:
   def __ne__(self, other):
     return not (self == other)
 
-class removeEndpoints_args:
+class removeEndpoint_args:
   """
   Attributes:
-   - serv
    - environment
-   - endpoints
+   - endpoint
   """
 
   thrift_spec = (
     None, # 0
-    (1, TType.I32, 'serv', None, None, ), # 1
-    (2, TType.STRING, 'environment', None, None, ), # 2
-    (3, TType.LIST, 'endpoints', (TType.STRUCT,(livetex.endpoint.ttypes.Endpoint, livetex.endpoint.ttypes.Endpoint.thrift_spec)), None, ), # 3
+    (1, TType.STRING, 'environment', None, None, ), # 1
+    (2, TType.STRUCT, 'endpoint', (livetex.endpoint.ttypes.Endpoint, livetex.endpoint.ttypes.Endpoint.thrift_spec), None, ), # 2
   )
 
-  def __init__(self, serv=None, environment=None, endpoints=None,):
-    self.serv = serv
+  def __init__(self, environment=None, endpoint=None,):
     self.environment = environment
-    self.endpoints = endpoints
+    self.endpoint = endpoint
 
   def read(self, iprot):
     if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
@@ -834,24 +825,14 @@ class removeEndpoints_args:
       if ftype == TType.STOP:
         break
       if fid == 1:
-        if ftype == TType.I32:
-          self.serv = iprot.readI32();
-        else:
-          iprot.skip(ftype)
-      elif fid == 2:
         if ftype == TType.STRING:
           self.environment = iprot.readString();
         else:
           iprot.skip(ftype)
-      elif fid == 3:
-        if ftype == TType.LIST:
-          self.endpoints = []
-          (_etype19, _size16) = iprot.readListBegin()
-          for _i20 in xrange(_size16):
-            _elem21 = livetex.endpoint.ttypes.Endpoint()
-            _elem21.read(iprot)
-            self.endpoints.append(_elem21)
-          iprot.readListEnd()
+      elif fid == 2:
+        if ftype == TType.STRUCT:
+          self.endpoint = livetex.endpoint.ttypes.Endpoint()
+          self.endpoint.read(iprot)
         else:
           iprot.skip(ftype)
       else:
@@ -863,21 +844,14 @@ class removeEndpoints_args:
     if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
-    oprot.writeStructBegin('removeEndpoints_args')
-    if self.serv is not None:
-      oprot.writeFieldBegin('serv', TType.I32, 1)
-      oprot.writeI32(self.serv)
-      oprot.writeFieldEnd()
+    oprot.writeStructBegin('removeEndpoint_args')
     if self.environment is not None:
-      oprot.writeFieldBegin('environment', TType.STRING, 2)
+      oprot.writeFieldBegin('environment', TType.STRING, 1)
       oprot.writeString(self.environment)
       oprot.writeFieldEnd()
-    if self.endpoints is not None:
-      oprot.writeFieldBegin('endpoints', TType.LIST, 3)
-      oprot.writeListBegin(TType.STRUCT, len(self.endpoints))
-      for iter22 in self.endpoints:
-        iter22.write(oprot)
-      oprot.writeListEnd()
+    if self.endpoint is not None:
+      oprot.writeFieldBegin('endpoint', TType.STRUCT, 2)
+      self.endpoint.write(oprot)
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()
@@ -897,7 +871,7 @@ class removeEndpoints_args:
   def __ne__(self, other):
     return not (self == other)
 
-class removeEndpoints_result:
+class removeEndpoint_result:
 
   thrift_spec = (
   )
@@ -920,7 +894,7 @@ class removeEndpoints_result:
     if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
-    oprot.writeStructBegin('removeEndpoints_result')
+    oprot.writeStructBegin('removeEndpoint_result')
     oprot.writeFieldStop()
     oprot.writeStructEnd()
 
@@ -1036,11 +1010,11 @@ class getEndpoints_result:
       if fid == 0:
         if ftype == TType.LIST:
           self.success = []
-          (_etype26, _size23) = iprot.readListBegin()
-          for _i27 in xrange(_size23):
-            _elem28 = livetex.endpoint.ttypes.Endpoint()
-            _elem28.read(iprot)
-            self.success.append(_elem28)
+          (_etype12, _size9) = iprot.readListBegin()
+          for _i13 in xrange(_size9):
+            _elem14 = livetex.endpoint.ttypes.Endpoint()
+            _elem14.read(iprot)
+            self.success.append(_elem14)
           iprot.readListEnd()
         else:
           iprot.skip(ftype)
@@ -1057,8 +1031,8 @@ class getEndpoints_result:
     if self.success is not None:
       oprot.writeFieldBegin('success', TType.LIST, 0)
       oprot.writeListBegin(TType.STRUCT, len(self.success))
-      for iter29 in self.success:
-        iter29.write(oprot)
+      for iter15 in self.success:
+        iter15.write(oprot)
       oprot.writeListEnd()
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
@@ -1079,21 +1053,21 @@ class getEndpoints_result:
   def __ne__(self, other):
     return not (self == other)
 
-class changeVisitorApplicationEnvironment_args:
+class changeAccountEnvironment_args:
   """
   Attributes:
-   - visitorApplication
+   - accountId
    - environment
   """
 
   thrift_spec = (
     None, # 0
-    (1, TType.STRUCT, 'visitorApplication', (livetex.client_entity.ttypes.VisitorApplication, livetex.client_entity.ttypes.VisitorApplication.thrift_spec), None, ), # 1
+    (1, TType.STRING, 'accountId', None, None, ), # 1
     (2, TType.STRING, 'environment', None, None, ), # 2
   )
 
-  def __init__(self, visitorApplication=None, environment=None,):
-    self.visitorApplication = visitorApplication
+  def __init__(self, accountId=None, environment=None,):
+    self.accountId = accountId
     self.environment = environment
 
   def read(self, iprot):
@@ -1106,9 +1080,8 @@ class changeVisitorApplicationEnvironment_args:
       if ftype == TType.STOP:
         break
       if fid == 1:
-        if ftype == TType.STRUCT:
-          self.visitorApplication = livetex.client_entity.ttypes.VisitorApplication()
-          self.visitorApplication.read(iprot)
+        if ftype == TType.STRING:
+          self.accountId = iprot.readString();
         else:
           iprot.skip(ftype)
       elif fid == 2:
@@ -1125,10 +1098,10 @@ class changeVisitorApplicationEnvironment_args:
     if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
-    oprot.writeStructBegin('changeVisitorApplicationEnvironment_args')
-    if self.visitorApplication is not None:
-      oprot.writeFieldBegin('visitorApplication', TType.STRUCT, 1)
-      self.visitorApplication.write(oprot)
+    oprot.writeStructBegin('changeAccountEnvironment_args')
+    if self.accountId is not None:
+      oprot.writeFieldBegin('accountId', TType.STRING, 1)
+      oprot.writeString(self.accountId)
       oprot.writeFieldEnd()
     if self.environment is not None:
       oprot.writeFieldBegin('environment', TType.STRING, 2)
@@ -1152,7 +1125,7 @@ class changeVisitorApplicationEnvironment_args:
   def __ne__(self, other):
     return not (self == other)
 
-class changeVisitorApplicationEnvironment_result:
+class changeAccountEnvironment_result:
 
   thrift_spec = (
   )
@@ -1175,7 +1148,7 @@ class changeVisitorApplicationEnvironment_result:
     if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
-    oprot.writeStructBegin('changeVisitorApplicationEnvironment_result')
+    oprot.writeStructBegin('changeAccountEnvironment_result')
     oprot.writeFieldStop()
     oprot.writeStructEnd()
 

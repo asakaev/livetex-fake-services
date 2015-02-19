@@ -18,39 +18,40 @@ from livetex.client_entity.ttypes import *
 
 try:
 
-  transport = THttpClient.THttpClient('http://localhost:10020/')
+  transport = THttpClient.THttpClient('http://localhost:10010/')
   protocol = TBinaryProtocol.TBinaryProtocol(transport)
 
   client = AuthenticationPrivate.Client(protocol)
 
   token = 'some_token'
   service = LivetexService.DIALOG
-  environment = 'dev'
-  endpoint1 = Endpoint('chat1.livetex.ru', 80, 'http', '/');
-  endpoint2 = Endpoint('chat2.livetex.ru', 443, 'https', '/');
+  environment = 'default_env'
+  endpoint1 = Endpoint(0, '127.0.0.1', 10040, 'http', '/');
+  endpoint2 = Endpoint(0, 'chat2.livetex.ru', 443, 'https', '/');
   endpoints = [endpoint1, endpoint2]
   application = VisitorApplication()
   application.token = 'some_token'
   application.application = 'application'
   application.key = 'api_key'
-  
+
   transport.open()
 
-  client.removeToken('some_token')
-  print 'remove token is ok'
+  # client.removeToken('account:5832:site:10005638:visitor:b7agnzxeq7ntrzfr')
+  # print 'remove token is ok'
 
-  print 'check token is ok: ' + str(client.checkToken('some_token'))
+  # print 'check token is ok: ' + str(
+  #     client.checkVisitorToken('account:5832:site:10005638:visitor:b7agnzxeq7ntrzfr', endpoint1))
 
-  client.addEndpoints(service, environment, endpoints)
-  print 'add endpoint is ok'
+  # client.addEndpoint(environment, endpoint1)
+  # print 'add endpoint is ok'
 
-  client.removeEndpoints(service, environment, endpoints)
-  print 'remove endpoint is ok'
+  # client.removeEndpoint(environment, endpoint1)
+  # print 'remove endpoint is ok'
 
-  print 'get endpoints is ok ' + str(client.getEndpoints(service, environment))
+  # print 'get endpoints is ok ' + str(client.getEndpoints(service, environment))
 
-  client.changeVisitorApplicationEnvironment(application, environment)
-  print 'change environment is ok'
+  # client.changeVisitorApplicationEnvironment(application, environment)
+  # print 'change environment is ok'
 
   transport.close()
 

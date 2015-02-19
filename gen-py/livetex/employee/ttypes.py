@@ -44,7 +44,7 @@ class Employee:
   options: опциональные аттрибуты оператора.
 
   Attributes:
-   - EmployeeId
+   - employeeId
    - status
    - firstname
    - lastname
@@ -56,7 +56,7 @@ class Employee:
 
   thrift_spec = (
     None, # 0
-    (1, TType.STRING, 'EmployeeId', None, None, ), # 1
+    (1, TType.STRING, 'employeeId', None, None, ), # 1
     (2, TType.STRING, 'status', None, None, ), # 2
     (3, TType.STRING, 'firstname', None, None, ), # 3
     (4, TType.STRING, 'lastname', None, None, ), # 4
@@ -66,8 +66,8 @@ class Employee:
     (8, TType.MAP, 'options', (TType.STRING,None,TType.STRING,None), None, ), # 8
   )
 
-  def __init__(self, EmployeeId=None, status=None, firstname=None, lastname=None, avatar=None, phone=None, email=None, options=None,):
-    self.EmployeeId = EmployeeId
+  def __init__(self, employeeId=None, status=None, firstname=None, lastname=None, avatar=None, phone=None, email=None, options=None,):
+    self.employeeId = employeeId
     self.status = status
     self.firstname = firstname
     self.lastname = lastname
@@ -87,7 +87,7 @@ class Employee:
         break
       if fid == 1:
         if ftype == TType.STRING:
-          self.EmployeeId = iprot.readString();
+          self.employeeId = iprot.readString();
         else:
           iprot.skip(ftype)
       elif fid == 2:
@@ -141,9 +141,9 @@ class Employee:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
     oprot.writeStructBegin('Employee')
-    if self.EmployeeId is not None:
-      oprot.writeFieldBegin('EmployeeId', TType.STRING, 1)
-      oprot.writeString(self.EmployeeId)
+    if self.employeeId is not None:
+      oprot.writeFieldBegin('employeeId', TType.STRING, 1)
+      oprot.writeString(self.employeeId)
       oprot.writeFieldEnd()
     if self.status is not None:
       oprot.writeFieldBegin('status', TType.STRING, 2)
@@ -181,8 +181,8 @@ class Employee:
     oprot.writeStructEnd()
 
   def validate(self):
-    if self.EmployeeId is None:
-      raise TProtocol.TProtocolException(message='Required field EmployeeId is unset!')
+    if self.employeeId is None:
+      raise TProtocol.TProtocolException(message='Required field employeeId is unset!')
     if self.status is None:
       raise TProtocol.TProtocolException(message='Required field status is unset!')
     if self.firstname is None:

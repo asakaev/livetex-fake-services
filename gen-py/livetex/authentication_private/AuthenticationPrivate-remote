@@ -25,11 +25,11 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
   print('')
   print('Functions:')
   print('  void removeToken(Token token)')
-  print('  CheckTokenResult checkToken(Token token)')
-  print('  void addEndpoints(LivetexService serv, Environment environment,  endpoints)')
-  print('  void removeEndpoints(LivetexService serv, Environment environment,  endpoints)')
+  print('  CheckTokenResult checkVisitorToken(Token token, Endpoint endpoint)')
+  print('  void addEndpoint(Environment environment, Endpoint endpoint)')
+  print('  void removeEndpoint(Environment environment, Endpoint endpoint)')
   print('   getEndpoints(LivetexService serv, Environment environment)')
-  print('  void changeVisitorApplicationEnvironment(VisitorApplication visitorApplication, Environment environment)')
+  print('  void changeAccountEnvironment(AccountId accountId, Environment environment)')
   print('')
   sys.exit(0)
 
@@ -92,23 +92,23 @@ if cmd == 'removeToken':
     sys.exit(1)
   pp.pprint(client.removeToken(eval(args[0]),))
 
-elif cmd == 'checkToken':
-  if len(args) != 1:
-    print('checkToken requires 1 args')
+elif cmd == 'checkVisitorToken':
+  if len(args) != 2:
+    print('checkVisitorToken requires 2 args')
     sys.exit(1)
-  pp.pprint(client.checkToken(eval(args[0]),))
+  pp.pprint(client.checkVisitorToken(eval(args[0]),eval(args[1]),))
 
-elif cmd == 'addEndpoints':
-  if len(args) != 3:
-    print('addEndpoints requires 3 args')
+elif cmd == 'addEndpoint':
+  if len(args) != 2:
+    print('addEndpoint requires 2 args')
     sys.exit(1)
-  pp.pprint(client.addEndpoints(eval(args[0]),eval(args[1]),eval(args[2]),))
+  pp.pprint(client.addEndpoint(eval(args[0]),eval(args[1]),))
 
-elif cmd == 'removeEndpoints':
-  if len(args) != 3:
-    print('removeEndpoints requires 3 args')
+elif cmd == 'removeEndpoint':
+  if len(args) != 2:
+    print('removeEndpoint requires 2 args')
     sys.exit(1)
-  pp.pprint(client.removeEndpoints(eval(args[0]),eval(args[1]),eval(args[2]),))
+  pp.pprint(client.removeEndpoint(eval(args[0]),eval(args[1]),))
 
 elif cmd == 'getEndpoints':
   if len(args) != 2:
@@ -116,11 +116,11 @@ elif cmd == 'getEndpoints':
     sys.exit(1)
   pp.pprint(client.getEndpoints(eval(args[0]),eval(args[1]),))
 
-elif cmd == 'changeVisitorApplicationEnvironment':
+elif cmd == 'changeAccountEnvironment':
   if len(args) != 2:
-    print('changeVisitorApplicationEnvironment requires 2 args')
+    print('changeAccountEnvironment requires 2 args')
     sys.exit(1)
-  pp.pprint(client.changeVisitorApplicationEnvironment(eval(args[0]),eval(args[1]),))
+  pp.pprint(client.changeAccountEnvironment(eval(args[0]),eval(args[1]),))
 
 else:
   print('Unrecognized method %s' % cmd)

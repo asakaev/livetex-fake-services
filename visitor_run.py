@@ -11,10 +11,10 @@ from livetex.visitor_data import Visitor
 from visitor_service import VisitorHandler
 
 hadler = VisitorHandler()
-pfactory = TBinaryProtocol.TBinaryProtocolFactory()
-#pfactory = TJSONProtocol.TJSONProtocolFactory()
+#pfactory = TBinaryProtocol.TBinaryProtocolFactory()
+pfactory = TJSONProtocol.TJSONProtocolFactory()
 processor = Visitor.Processor(hadler)
 
-server = THttpServer.THttpServer(processor, ('localhost', 10060), pfactory)
+server = THttpServer.THttpServer(processor, ('localhost', 10070), pfactory)
 print 'Visitor 10060 serve...'
 server.serve()

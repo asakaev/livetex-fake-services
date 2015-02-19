@@ -37,6 +37,21 @@ class Iface:
     """
     pass
 
+  def getVisitorDeviceToken(self, visitorDevice):
+    """
+    Получение токена аутентификации и списка доступных сервисов. При возобновлении соединения
+    либо выходе из спящего режима требуется запросить новый токен.
+
+
+    @param VisitorDevice - данные устройства посетителя для сервиса аутентификации.
+
+    @throws InvalidClientError - ошибка невалидного клиента, обусловлена неверно сформированным VisitorApplication.
+
+    Parameters:
+     - visitorDevice
+    """
+    pass
+
 
 class Client(Iface):
   """
@@ -88,12 +103,53 @@ class Client(Iface):
       raise result.error
     raise TApplicationException(TApplicationException.MISSING_RESULT, "getVisitorApplicationToken failed: unknown result");
 
+  def getVisitorDeviceToken(self, visitorDevice):
+    """
+    Получение токена аутентификации и списка доступных сервисов. При возобновлении соединения
+    либо выходе из спящего режима требуется запросить новый токен.
+
+
+    @param VisitorDevice - данные устройства посетителя для сервиса аутентификации.
+
+    @throws InvalidClientError - ошибка невалидного клиента, обусловлена неверно сформированным VisitorApplication.
+
+    Parameters:
+     - visitorDevice
+    """
+    self.send_getVisitorDeviceToken(visitorDevice)
+    return self.recv_getVisitorDeviceToken()
+
+  def send_getVisitorDeviceToken(self, visitorDevice):
+    self._oprot.writeMessageBegin('getVisitorDeviceToken', TMessageType.CALL, self._seqid)
+    args = getVisitorDeviceToken_args()
+    args.visitorDevice = visitorDevice
+    args.write(self._oprot)
+    self._oprot.writeMessageEnd()
+    self._oprot.trans.flush()
+
+  def recv_getVisitorDeviceToken(self):
+    (fname, mtype, rseqid) = self._iprot.readMessageBegin()
+    if mtype == TMessageType.EXCEPTION:
+      x = TApplicationException()
+      x.read(self._iprot)
+      self._iprot.readMessageEnd()
+      raise x
+    result = getVisitorDeviceToken_result()
+    result.read(self._iprot)
+    self._iprot.readMessageEnd()
+    if result.success is not None:
+      return result.success
+    if result.error is not None:
+      raise result.error
+    raise TApplicationException(TApplicationException.MISSING_RESULT, "getVisitorDeviceToken failed: unknown result");
+
 
 class Processor(Iface, TProcessor):
   def __init__(self, handler):
     self._handler = handler
     self._processMap = {}
     self._processMap["getVisitorApplicationToken"] = Processor.process_getVisitorApplicationToken
+    self._processMap["getVisitorDeviceToken"] = Processor.process_getVisitorDeviceToken
 
   def process(self, iprot, oprot):
     (name, type, seqid) = iprot.readMessageBegin()
@@ -120,6 +176,20 @@ class Processor(Iface, TProcessor):
     except InvalidClientError, error:
       result.error = error
     oprot.writeMessageBegin("getVisitorApplicationToken", TMessageType.REPLY, seqid)
+    result.write(oprot)
+    oprot.writeMessageEnd()
+    oprot.trans.flush()
+
+  def process_getVisitorDeviceToken(self, seqid, iprot, oprot):
+    args = getVisitorDeviceToken_args()
+    args.read(iprot)
+    iprot.readMessageEnd()
+    result = getVisitorDeviceToken_result()
+    try:
+      result.success = self._handler.getVisitorDeviceToken(args.visitorDevice)
+    except InvalidClientError, error:
+      result.error = error
+    oprot.writeMessageBegin("getVisitorDeviceToken", TMessageType.REPLY, seqid)
     result.write(oprot)
     oprot.writeMessageEnd()
     oprot.trans.flush()
@@ -235,6 +305,140 @@ class getVisitorApplicationToken_result:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
     oprot.writeStructBegin('getVisitorApplicationToken_result')
+    if self.success is not None:
+      oprot.writeFieldBegin('success', TType.STRUCT, 0)
+      self.success.write(oprot)
+      oprot.writeFieldEnd()
+    if self.error is not None:
+      oprot.writeFieldBegin('error', TType.STRUCT, 1)
+      self.error.write(oprot)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class getVisitorDeviceToken_args:
+  """
+  Attributes:
+   - visitorDevice
+  """
+
+  thrift_spec = (
+    None, # 0
+    (1, TType.STRUCT, 'visitorDevice', (livetex.visitor_device.ttypes.VisitorDevice, livetex.visitor_device.ttypes.VisitorDevice.thrift_spec), None, ), # 1
+  )
+
+  def __init__(self, visitorDevice=None,):
+    self.visitorDevice = visitorDevice
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 1:
+        if ftype == TType.STRUCT:
+          self.visitorDevice = livetex.visitor_device.ttypes.VisitorDevice()
+          self.visitorDevice.read(iprot)
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('getVisitorDeviceToken_args')
+    if self.visitorDevice is not None:
+      oprot.writeFieldBegin('visitorDevice', TType.STRUCT, 1)
+      self.visitorDevice.write(oprot)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class getVisitorDeviceToken_result:
+  """
+  Attributes:
+   - success
+   - error
+  """
+
+  thrift_spec = (
+    (0, TType.STRUCT, 'success', (AuthenticationResult, AuthenticationResult.thrift_spec), None, ), # 0
+    (1, TType.STRUCT, 'error', (InvalidClientError, InvalidClientError.thrift_spec), None, ), # 1
+  )
+
+  def __init__(self, success=None, error=None,):
+    self.success = success
+    self.error = error
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 0:
+        if ftype == TType.STRUCT:
+          self.success = AuthenticationResult()
+          self.success.read(iprot)
+        else:
+          iprot.skip(ftype)
+      elif fid == 1:
+        if ftype == TType.STRUCT:
+          self.error = InvalidClientError()
+          self.error.read(iprot)
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('getVisitorDeviceToken_result')
     if self.success is not None:
       oprot.writeFieldBegin('success', TType.STRUCT, 0)
       self.success.write(oprot)

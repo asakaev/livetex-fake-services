@@ -83,18 +83,33 @@ class Iface:
     """
     pass
 
-  def vote(self, vote):
+  def vote(self, voteType):
     """
     Оценка диалога с собеседником.
 
 
-    @param vote - оценка собеседника.
+    @param voteType - оценка собеседника.
 
     @throws ChatError - ошибка сервиса чата. Может возникать в
       случае отсутствия текущего диалога.
 
     Parameters:
-     - vote
+     - voteType
+    """
+    pass
+
+  def abuse(self, abuse):
+    """
+    Жалоба на диалог.
+
+
+    @param Abuse - жалоба.
+
+    @throws ChatError - ошибка сервиса чата. Может возникать в
+      случае отсутствия текущего диалога.
+
+    Parameters:
+     - abuse
     """
     pass
 
@@ -339,26 +354,26 @@ class Client(Iface):
       raise result.error
     raise TApplicationException(TApplicationException.MISSING_RESULT, "close failed: unknown result");
 
-  def vote(self, vote):
+  def vote(self, voteType):
     """
     Оценка диалога с собеседником.
 
 
-    @param vote - оценка собеседника.
+    @param voteType - оценка собеседника.
 
     @throws ChatError - ошибка сервиса чата. Может возникать в
       случае отсутствия текущего диалога.
 
     Parameters:
-     - vote
+     - voteType
     """
-    self.send_vote(vote)
+    self.send_vote(voteType)
     self.recv_vote()
 
-  def send_vote(self, vote):
+  def send_vote(self, voteType):
     self._oprot.writeMessageBegin('vote', TMessageType.CALL, self._seqid)
     args = vote_args()
-    args.vote = vote
+    args.voteType = voteType
     args.write(self._oprot)
     self._oprot.writeMessageEnd()
     self._oprot.trans.flush()
@@ -371,6 +386,44 @@ class Client(Iface):
       self._iprot.readMessageEnd()
       raise x
     result = vote_result()
+    result.read(self._iprot)
+    self._iprot.readMessageEnd()
+    if result.error is not None:
+      raise result.error
+    return
+
+  def abuse(self, abuse):
+    """
+    Жалоба на диалог.
+
+
+    @param Abuse - жалоба.
+
+    @throws ChatError - ошибка сервиса чата. Может возникать в
+      случае отсутствия текущего диалога.
+
+    Parameters:
+     - abuse
+    """
+    self.send_abuse(abuse)
+    self.recv_abuse()
+
+  def send_abuse(self, abuse):
+    self._oprot.writeMessageBegin('abuse', TMessageType.CALL, self._seqid)
+    args = abuse_args()
+    args.abuse = abuse
+    args.write(self._oprot)
+    self._oprot.writeMessageEnd()
+    self._oprot.trans.flush()
+
+  def recv_abuse(self):
+    (fname, mtype, rseqid) = self._iprot.readMessageBegin()
+    if mtype == TMessageType.EXCEPTION:
+      x = TApplicationException()
+      x.read(self._iprot)
+      self._iprot.readMessageEnd()
+      raise x
+    result = abuse_result()
     result.read(self._iprot)
     self._iprot.readMessageEnd()
     if result.error is not None:
@@ -576,6 +629,7 @@ class Processor(Iface, TProcessor):
     self._processMap["requestDepartment"] = Processor.process_requestDepartment
     self._processMap["close"] = Processor.process_close
     self._processMap["vote"] = Processor.process_vote
+    self._processMap["abuse"] = Processor.process_abuse
     self._processMap["typing"] = Processor.process_typing
     self._processMap["sendTextMessage"] = Processor.process_sendTextMessage
     self._processMap["confirmTextMessage"] = Processor.process_confirmTextMessage
@@ -659,10 +713,24 @@ class Processor(Iface, TProcessor):
     iprot.readMessageEnd()
     result = vote_result()
     try:
-      self._handler.vote(args.vote)
+      self._handler.vote(args.voteType)
     except ChatError, error:
       result.error = error
     oprot.writeMessageBegin("vote", TMessageType.REPLY, seqid)
+    result.write(oprot)
+    oprot.writeMessageEnd()
+    oprot.trans.flush()
+
+  def process_abuse(self, seqid, iprot, oprot):
+    args = abuse_args()
+    args.read(iprot)
+    iprot.readMessageEnd()
+    result = abuse_result()
+    try:
+      self._handler.abuse(args.abuse)
+    except ChatError, error:
+      result.error = error
+    oprot.writeMessageBegin("abuse", TMessageType.REPLY, seqid)
     result.write(oprot)
     oprot.writeMessageEnd()
     oprot.trans.flush()
@@ -1284,16 +1352,16 @@ class close_result:
 class vote_args:
   """
   Attributes:
-   - vote
+   - voteType
   """
 
   thrift_spec = (
     None, # 0
-    (1, TType.STRUCT, 'vote', (livetex.vote.ttypes.Vote, livetex.vote.ttypes.Vote.thrift_spec), None, ), # 1
+    (1, TType.I32, 'voteType', None, None, ), # 1
   )
 
-  def __init__(self, vote=None,):
-    self.vote = vote
+  def __init__(self, voteType=None,):
+    self.voteType = voteType
 
   def read(self, iprot):
     if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
@@ -1305,9 +1373,8 @@ class vote_args:
       if ftype == TType.STOP:
         break
       if fid == 1:
-        if ftype == TType.STRUCT:
-          self.vote = livetex.vote.ttypes.Vote()
-          self.vote.read(iprot)
+        if ftype == TType.I32:
+          self.voteType = iprot.readI32();
         else:
           iprot.skip(ftype)
       else:
@@ -1320,9 +1387,9 @@ class vote_args:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
     oprot.writeStructBegin('vote_args')
-    if self.vote is not None:
-      oprot.writeFieldBegin('vote', TType.STRUCT, 1)
-      self.vote.write(oprot)
+    if self.voteType is not None:
+      oprot.writeFieldBegin('voteType', TType.I32, 1)
+      oprot.writeI32(self.voteType)
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()
@@ -1381,6 +1448,128 @@ class vote_result:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
     oprot.writeStructBegin('vote_result')
+    if self.error is not None:
+      oprot.writeFieldBegin('error', TType.STRUCT, 1)
+      self.error.write(oprot)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class abuse_args:
+  """
+  Attributes:
+   - abuse
+  """
+
+  thrift_spec = (
+    None, # 0
+    (1, TType.STRUCT, 'abuse', (livetex.abuse.ttypes.Abuse, livetex.abuse.ttypes.Abuse.thrift_spec), None, ), # 1
+  )
+
+  def __init__(self, abuse=None,):
+    self.abuse = abuse
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 1:
+        if ftype == TType.STRUCT:
+          self.abuse = livetex.abuse.ttypes.Abuse()
+          self.abuse.read(iprot)
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('abuse_args')
+    if self.abuse is not None:
+      oprot.writeFieldBegin('abuse', TType.STRUCT, 1)
+      self.abuse.write(oprot)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class abuse_result:
+  """
+  Attributes:
+   - error
+  """
+
+  thrift_spec = (
+    None, # 0
+    (1, TType.STRUCT, 'error', (ChatError, ChatError.thrift_spec), None, ), # 1
+  )
+
+  def __init__(self, error=None,):
+    self.error = error
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 1:
+        if ftype == TType.STRUCT:
+          self.error = ChatError()
+          self.error.read(iprot)
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('abuse_result')
     if self.error is not None:
       oprot.writeFieldBegin('error', TType.STRUCT, 1)
       self.error.write(oprot)

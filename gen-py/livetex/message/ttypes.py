@@ -192,7 +192,7 @@ class TextMessage:
     (1, TType.STRING, 'id', None, None, ), # 1
     (2, TType.STRING, 'text', None, None, ), # 2
     (3, TType.STRING, 'timestamp', None, None, ), # 3
-    (4, TType.STRUCT, 'sender', (livetex.employee.ttypes.Employee, livetex.employee.ttypes.Employee.thrift_spec), None, ), # 4
+    (4, TType.STRING, 'sender', None, None, ), # 4
   )
 
   def __init__(self, id=None, text=None, timestamp=None, sender=None,):
@@ -226,9 +226,8 @@ class TextMessage:
         else:
           iprot.skip(ftype)
       elif fid == 4:
-        if ftype == TType.STRUCT:
-          self.sender = livetex.employee.ttypes.Employee()
-          self.sender.read(iprot)
+        if ftype == TType.STRING:
+          self.sender = iprot.readString();
         else:
           iprot.skip(ftype)
       else:
@@ -254,8 +253,8 @@ class TextMessage:
       oprot.writeString(self.timestamp)
       oprot.writeFieldEnd()
     if self.sender is not None:
-      oprot.writeFieldBegin('sender', TType.STRUCT, 4)
-      self.sender.write(oprot)
+      oprot.writeFieldBegin('sender', TType.STRING, 4)
+      oprot.writeString(self.sender)
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()
@@ -311,7 +310,7 @@ class FileMessage:
     (2, TType.STRING, 'text', None, None, ), # 2
     (3, TType.STRING, 'timestamp', None, None, ), # 3
     (4, TType.STRING, 'url', None, None, ), # 4
-    (5, TType.STRUCT, 'sender', (livetex.employee.ttypes.Employee, livetex.employee.ttypes.Employee.thrift_spec), None, ), # 5
+    (5, TType.STRING, 'sender', None, None, ), # 5
   )
 
   def __init__(self, id=None, text=None, timestamp=None, url=None, sender=None,):
@@ -351,9 +350,8 @@ class FileMessage:
         else:
           iprot.skip(ftype)
       elif fid == 5:
-        if ftype == TType.STRUCT:
-          self.sender = livetex.employee.ttypes.Employee()
-          self.sender.read(iprot)
+        if ftype == TType.STRING:
+          self.sender = iprot.readString();
         else:
           iprot.skip(ftype)
       else:
@@ -383,8 +381,8 @@ class FileMessage:
       oprot.writeString(self.url)
       oprot.writeFieldEnd()
     if self.sender is not None:
-      oprot.writeFieldBegin('sender', TType.STRUCT, 5)
-      self.sender.write(oprot)
+      oprot.writeFieldBegin('sender', TType.STRING, 5)
+      oprot.writeString(self.sender)
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()

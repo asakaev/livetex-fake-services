@@ -8,6 +8,8 @@
 #
 
 from thrift.Thrift import TType, TMessageType, TException, TApplicationException
+import livetex.livetex_service.ttypes
+
 
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol, TProtocol
@@ -23,6 +25,8 @@ class Endpoint:
   Точка входа в сервис.
 
 
+  serv: сервис.
+
   host: адрес хоста.
 
   port: порт.
@@ -32,6 +36,7 @@ class Endpoint:
   path: путь.
 
   Attributes:
+   - serv
    - host
    - port
    - protocol
@@ -40,13 +45,15 @@ class Endpoint:
 
   thrift_spec = (
     None, # 0
-    (1, TType.STRING, 'host', None, None, ), # 1
-    (2, TType.I16, 'port', None, None, ), # 2
-    (3, TType.STRING, 'protocol', None, None, ), # 3
-    (4, TType.STRING, 'path', None, None, ), # 4
+    (1, TType.I32, 'serv', None, None, ), # 1
+    (2, TType.STRING, 'host', None, None, ), # 2
+    (3, TType.I16, 'port', None, None, ), # 3
+    (4, TType.STRING, 'protocol', None, None, ), # 4
+    (5, TType.STRING, 'path', None, None, ), # 5
   )
 
-  def __init__(self, host=None, port=None, protocol=None, path=None,):
+  def __init__(self, serv=None, host=None, port=None, protocol=None, path=None,):
+    self.serv = serv
     self.host = host
     self.port = port
     self.protocol = protocol
@@ -62,21 +69,26 @@ class Endpoint:
       if ftype == TType.STOP:
         break
       if fid == 1:
+        if ftype == TType.I32:
+          self.serv = iprot.readI32();
+        else:
+          iprot.skip(ftype)
+      elif fid == 2:
         if ftype == TType.STRING:
           self.host = iprot.readString();
         else:
           iprot.skip(ftype)
-      elif fid == 2:
+      elif fid == 3:
         if ftype == TType.I16:
           self.port = iprot.readI16();
         else:
           iprot.skip(ftype)
-      elif fid == 3:
+      elif fid == 4:
         if ftype == TType.STRING:
           self.protocol = iprot.readString();
         else:
           iprot.skip(ftype)
-      elif fid == 4:
+      elif fid == 5:
         if ftype == TType.STRING:
           self.path = iprot.readString();
         else:
@@ -91,26 +103,32 @@ class Endpoint:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
     oprot.writeStructBegin('Endpoint')
+    if self.serv is not None:
+      oprot.writeFieldBegin('serv', TType.I32, 1)
+      oprot.writeI32(self.serv)
+      oprot.writeFieldEnd()
     if self.host is not None:
-      oprot.writeFieldBegin('host', TType.STRING, 1)
+      oprot.writeFieldBegin('host', TType.STRING, 2)
       oprot.writeString(self.host)
       oprot.writeFieldEnd()
     if self.port is not None:
-      oprot.writeFieldBegin('port', TType.I16, 2)
+      oprot.writeFieldBegin('port', TType.I16, 3)
       oprot.writeI16(self.port)
       oprot.writeFieldEnd()
     if self.protocol is not None:
-      oprot.writeFieldBegin('protocol', TType.STRING, 3)
+      oprot.writeFieldBegin('protocol', TType.STRING, 4)
       oprot.writeString(self.protocol)
       oprot.writeFieldEnd()
     if self.path is not None:
-      oprot.writeFieldBegin('path', TType.STRING, 4)
+      oprot.writeFieldBegin('path', TType.STRING, 5)
       oprot.writeString(self.path)
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()
 
   def validate(self):
+    if self.serv is None:
+      raise TProtocol.TProtocolException(message='Required field serv is unset!')
     if self.host is None:
       raise TProtocol.TProtocolException(message='Required field host is unset!')
     if self.port is None:

@@ -16,6 +16,6 @@ pfactory = TBinaryProtocol.TBinaryProtocolFactory()
 #pfactory = TJSONProtocol.TJSONProtocolFactory()
 processor = AuthenticationPublic.Processor(authPublicHandler)
 
-server = THttpServer.THttpServer(processor, ('localhost', 10010), pfactory)
+server = THttpServer.THttpServer(processor, ('0.0.0.0', 10010), pfactory)
 print 'Authentication public 10010 serve...'
 server.serve()
